@@ -8,6 +8,8 @@ from Team import team
 import graphs
 import predicts
 
+teams = []
+
 def teams_contains(teams,name):
 	value = 0
 	aux = 1
@@ -49,6 +51,9 @@ def calculate_rates(teams):
 		team.getRatesDiffs()
 		team.getGoalsData()
 		team.getCornersData()
+
+def getTeams():
+	return teams
 
 def getLeague():
 	teams = []
@@ -99,7 +104,6 @@ if len(sys.argv) < 2:
 	print("P1 - Liga Nos")
 	print("D1 - Bundesliga")
 else:
-	
 	teams = getLeague()
 	calculate_rates(teams)
 	print_teams(teams)
@@ -107,19 +111,19 @@ else:
 	while(True):
 		txt = input("1-Goals Scored\n2-Goals Conceded\n3-Diffs\n4-Corners\n5-Predict_scored\n6-Predict_conceded\n")
 		if txt is "1":
-			graphs.graph_averages(sort_by_points(teams),"goalsScored","home")
-			graphs.graph_averages(sort_by_points(teams),"goalsScored","away")
-			graphs.graph_averages(sort_by_points(teams),"goalsScored","all")
+			graphs.graph_averages(fig,sort_by_points(teams),"goalsScored","home")
+			graphs.graph_averages(fig,sort_by_points(teams),"goalsScored","away")
+			graphs.graph_averages(fig,sort_by_points(teams),"goalsScored","all")
 		elif txt is "2":
-			graphs.graph_averages(sort_by_points(teams),"goalsConceded","home")
-			graphs.graph_averages(sort_by_points(teams),"goalsConceded","away")
-			graphs.graph_averages(sort_by_points(teams),"goalsConceded","all")
+			graphs.graph_averages(fig,sort_by_points(teams),"goalsConceded","home")
+			graphs.graph_averages(fig,sort_by_points(teams),"goalsConceded","away")
+			graphs.graph_averages(fig,sort_by_points(teams),"goalsConceded","all")
 		elif txt is "3":
-			graphs.graph_averages(sort_by_points(teams),"diffs","home")
-			graphs.graph_averages(sort_by_points(teams),"diffs","away")
-			graphs.graph_averages(sort_by_points(teams),"diffs","all")
+			graphs.graph_averages(fig,sort_by_points(teams),"diffs","home")
+			graphs.graph_averages(fig,sort_by_points(teams),"diffs","away")
+			graphs.graph_averages(fig,sort_by_points(teams),"diffs","all")
 		elif txt is "4":
-			graphs.graph_averages(sort_by_points(teams),"corners","all")
+			graphs.graph_averages(fig,sort_by_points(teams),"corners","all")
 		elif txt is "5":
 			h = input("HomeIndex ")
 			a = input("AwayIndex ")
