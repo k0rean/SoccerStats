@@ -22,3 +22,7 @@ class game:
 		self.aFouls = int(row[16+i])
 		self.hCorners = int(row[17+i])
 		self.aCorners = int(row[18+i])
+		self.hYellow = int(row[19+i])
+		self.aYellow = int(row[20+i])
+		self.hRed = int(row[21+i])
+		self.aRed = int(row[22+i])

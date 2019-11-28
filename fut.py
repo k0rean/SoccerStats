@@ -7,6 +7,7 @@ from Game import game
 from Team import team
 import graphs
 import predicts
+import os
 
 def teams_contains(teams,name):
 	value = 0
@@ -49,6 +50,9 @@ def calculate_rates(teams):
 		team.getRatesDiffs()
 		team.getGoalsData()
 		team.getCornersData()
+		team.getShotsData()
+		team.getFoulsData()
+		team.getCardsData()
 
 def getLeague():
 	teams = []
@@ -85,6 +89,7 @@ def getLeague():
 				teams[aIndex].pointsCalc_away(g)
 
 			line_count += 1
+	os.remove(filename)
 	return teams
 
 
@@ -105,7 +110,7 @@ else:
 	print_teams(teams)
 
 	while(True):
-		txt = input("1-Goals Scored\n2-Goals Conceded\n3-Diffs\n4-Corners\n5-Predict_scored\n6-Predict_conceded\n")
+		txt = input("1-Goals Scored\n2-Goals Conceded\n3-Diffs\n4-Corners\n5-Shots\n6-Fouls\n7-Cards\n8-Shots accuracy\n9-Predict_scored\n10-Predict_conceded\n")
 		if txt is "1":
 			graphs.graph_averages(sort_by_points(teams),"goalsScored","home")
 			graphs.graph_averages(sort_by_points(teams),"goalsScored","away")
@@ -121,10 +126,18 @@ else:
 		elif txt is "4":
 			graphs.graph_averages(sort_by_points(teams),"corners","all")
 		elif txt is "5":
+			graphs.graph_averages(sort_by_points(teams),"shots","all")
+		elif txt is "6":
+			graphs.graph_averages(sort_by_points(teams),"fouls","all")
+		elif txt is "7":
+			graphs.graph_averages(sort_by_points(teams),"cards","all")
+		elif txt is "8":
+			graphs.graph_averages(sort_by_points(teams),"shots_acc","all")
+		elif txt is "9":
 			h = input("HomeIndex ")
 			a = input("AwayIndex ")
 			predicts.predict_outcome(teams[int(h)],teams[int(a)],"scored")
-		elif txt is "6":
+		elif txt is "10":
 			h = input("HomeIndex ")
 			a = input("AwayIndex ")
 			predicts.predict_outcome(teams[int(h)],teams[int(a)],"conceded")
