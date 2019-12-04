@@ -1,4 +1,9 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+
+mpl.rcParams['toolbar'] = 'None'
+fig = ""
 
 def graph_averages(teams,type,side):
 	if type is "diffs":
@@ -13,10 +18,10 @@ def graph_averages(teams,type,side):
 		graph_shots(teams)
 	elif type is "shots_acc":
 		graph_shots_acc(teams)
-	elif type is "fouls":
-		graph_fouls(teams)
 	elif type is "cards":
 		graph_cards(teams)
+	elif type is "fouls":
+		graph_fouls(teams)
 
 def graph_goals_scored(teams,side):
 	teams_1st = []
