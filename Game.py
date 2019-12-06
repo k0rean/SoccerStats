@@ -1,7 +1,7 @@
 import sys
 
 class game:
-	def __init__(self,hIndex,aIndex,row):
+	def __init__(self,hIndex,aIndex,row,label):
 		self.hIndex = hIndex
 		self.aIndex = aIndex
 		self.hScore = int(row[5])
@@ -9,7 +9,7 @@ class game:
 		self.hInt = int(row[8])
 		self.aInt = int(row[9])
 		## new data
-		if "E" in sys.argv[1]:
+		if "E" in label:
 			i = 1
 		else:
 			i = 0

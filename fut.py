@@ -10,73 +10,141 @@ import predicts
 import os
 from tkinter import *
 
-GUI = 0
+GUI = 1
 teams = []
+active_league = ""
 
 class Application:
 	def __init__(self, master=None):
 
-		self.widget1 = Frame(master)
+		self.widget1 = Frame(master,width=1000, height=1000)
 		self.widget1.pack()
-		self.msg = Label(self.widget1, text="SoccerStats")
-		self.msg["font"] = ("Calibri", "20", "italic")
-		self.msg.pack()
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league))
+		self.msg["font"] = ("Calibri", "30", "italic")
+		self.msg.place(x=350,y=0)
 		## Scored
 		self.scored = Button(self.widget1)  
 		self.scored["text"] = "Scored"
 		self.scored["font"] = ("Calibri", "9")
 		self.scored["width"] = 10
 		self.scored.bind("<Button-1>", self.scored_func)
-		self.scored.pack()
+		self.scored.place(x=200, y=200)
 		## Conceded
 		self.conceded = Button(self.widget1)
 		self.conceded["text"] = "Conceded"
 		self.conceded["font"] = ("Calibri", "9")
 		self.conceded["width"] = 10
 		self.conceded.bind("<Button-1>", self.conceded_func)
-		self.conceded.pack()
+		self.conceded.place(x=200, y=250)
 		## Diffs
 		self.diffs = Button(self.widget1)
 		self.diffs["text"] = "Diffs"
 		self.diffs["font"] = ("Calibri", "9")
 		self.diffs["width"] = 10
 		self.diffs.bind("<Button-1>", self.diffs_func)
-		self.diffs.pack()
+		self.diffs.place(x=200, y=300)
 		## Corners
 		self.corners = Button(self.widget1)
 		self.corners["text"] = "Corners"
 		self.corners["font"] = ("Calibri", "9")
 		self.corners["width"] = 10
 		self.corners.bind("<Button-1>", self.corners_func)
-		self.corners.pack()
+		self.corners.place(x=200, y=350)
 		## Shots
 		self.shots = Button(self.widget1)
 		self.shots["text"] = "Shots"
 		self.shots["font"] = ("Calibri", "9")
 		self.shots["width"] = 10
 		self.shots.bind("<Button-1>", self.shots_func)
-		self.shots.pack()
+		self.shots.place(x=200, y=400)
 		## Shots_acc
 		self.shots_acc = Button(self.widget1)
 		self.shots_acc["text"] = "Shots acc"
 		self.shots_acc["font"] = ("Calibri", "9")
 		self.shots_acc["width"] = 10
 		self.shots_acc.bind("<Button-1>", self.shots_acc_func)
-		self.shots_acc.pack()
+		self.shots_acc.place(x=200, y=450)
 		## Fouls
 		self.fouls = Button(self.widget1)
 		self.fouls["text"] = "Fouls"
 		self.fouls["font"] = ("Calibri", "9")
 		self.fouls["width"] = 10
 		self.fouls.bind("<Button-1>", self.fouls_func)
-		self.fouls.pack()
+		self.fouls.place(x=200, y=500)
 		## Shots_acc
 		self.cards = Button(self.widget1)
 		self.cards["text"] = "Cards"
 		self.cards["font"] = ("Calibri", "9")
 		self.cards["width"] = 10
 		self.cards.bind("<Button-1>", self.cards_func)
-		self.cards.pack()
+		self.cards.place(x=200, y=550)
+
+		##LIGAS
+		## liganos
+		self.liganos = Button(self.widget1)  
+		self.liganos["text"] = "Liga Nos"
+		self.liganos["font"] = ("Calibri", "9")
+		self.liganos["width"] = 10
+		self.liganos.bind("<Button-1>", self.liganos_func)
+		self.liganos.place(x=0, y=200)
+		## premier_league
+		self.premier_league = Button(self.widget1)
+		self.premier_league["text"] = "Premier League"
+		self.premier_league["font"] = ("Calibri", "9")
+		self.premier_league["width"] = 10
+		self.premier_league.bind("<Button-1>", self.premier_league_func)
+		self.premier_league.place(x=0, y=250)
+		## championship
+		self.championship = Button(self.widget1)
+		self.championship["text"] = "Championship"
+		self.championship["font"] = ("Calibri", "9")
+		self.championship["width"] = 10
+		self.championship.bind("<Button-1>", self.championship_func)
+		self.championship.place(x=0, y=300)
+		## La_Liga
+		self.La_Liga = Button(self.widget1)
+		self.La_Liga["text"] = "La Liga"
+		self.La_Liga["font"] = ("Calibri", "9")
+		self.La_Liga["width"] = 10
+		self.La_Liga.bind("<Button-1>", self.La_Liga_func)
+		self.La_Liga.place(x=0, y=350)
+		## La_Liga2
+		self.La_Liga2 = Button(self.widget1)
+		self.La_Liga2["text"] = "La Liga 2"
+		self.La_Liga2["font"] = ("Calibri", "9")
+		self.La_Liga2["width"] = 10
+		self.La_Liga2.bind("<Button-1>", self.La_Liga2_func)
+		self.La_Liga2.place(x=0, y=400)
+		## SerieA
+		self.SerieA = Button(self.widget1)
+		self.SerieA["text"] = "Serie A"
+		self.SerieA["font"] = ("Calibri", "9")
+		self.SerieA["width"] = 10
+		self.SerieA.bind("<Button-1>", self.SerieA_func)
+		self.SerieA.place(x=0, y=450)
+		## Bundesliga
+		self.Bundesliga = Button(self.widget1)
+		self.Bundesliga["text"] = "Bundesliga"
+		self.Bundesliga["font"] = ("Calibri", "9")
+		self.Bundesliga["width"] = 10
+		self.Bundesliga.bind("<Button-1>", self.Bundesliga_func)
+		self.Bundesliga.place(x=0, y=500)
+		## Bundesliga2
+		self.Bundesliga2 = Button(self.widget1)
+		self.Bundesliga2["text"] = "Bundesliga2"
+		self.Bundesliga2["font"] = ("Calibri", "9")
+		self.Bundesliga2["width"] = 10
+		self.Bundesliga2.bind("<Button-1>", self.Bundesliga2_func)
+		self.Bundesliga2.place(x=0, y=550)
+		## Ligue 1
+		self.ligue1 = Button(self.widget1)
+		self.ligue1["text"] = "Ligue 1"
+		self.ligue1["font"] = ("Calibri", "9")
+		self.ligue1["width"] = 10
+		self.ligue1.bind("<Button-1>", self.ligue1_func)
+		self.ligue1.place(x=0, y=600)
+
   
 	def scored_func(self, event):
 		graph_averages(sort_by_points(teams),"goalsScored","home")
@@ -101,6 +169,70 @@ class Application:
 
 	def cards_func(self, event):
 		graph_averages(sort_by_points(teams),"cards","all")
+
+	##Ligas
+	def liganos_func(self, event):
+		global teams
+		active_league = "Liga Nos"
+		teams = getLeague("P1")
+		calculate_rates(teams)
+		print_teams(teams)
+
+	def premier_league_func(self, event):
+		global teams
+		active_league = "Premier League"
+		teams = getLeague("E0")
+		calculate_rates(teams)
+		print_teams(teams)
+
+	def championship_func(self, event):
+		global teams
+		active_league = "Championship"
+		teams = getLeague("E1") 
+		calculate_rates(teams)
+		print_teams(teams)      
+
+	def La_Liga_func(self, event):
+		global teams
+		active_league = "La Liga"
+		teams = getLeague("SP1")
+		calculate_rates(teams)
+		print_teams(teams) 
+
+	def La_Liga2_func(self, event):
+		global teams
+		active_league = "La Liga 2"
+		teams = getLeague("SP2")
+		calculate_rates(teams)
+		print_teams(teams) 
+
+	def SerieA_func(self, event):
+		global teams
+		active_league = "Serie A"
+		teams = getLeague("I1")
+		calculate_rates(teams)
+		print_teams(teams) 
+  
+	def Bundesliga_func(self, event):
+		global teams
+		active_league = "Bundesliga"
+		teams = getLeague("D1")
+		calculate_rates(teams)
+		print_teams(teams) 
+
+	def Bundesliga2_func(self, event):
+		global teams
+		active_league = "Bundesliga 2"
+		teams = getLeague("D2")
+		calculate_rates(teams)
+		print_teams(teams) 
+
+	def ligue1_func(self, event):
+		global teams
+		active_league = "Ligue 1"
+		teams = getLeague("F1")
+		calculate_rates(teams)
+		print_teams(teams) 
   
 def initGUI():
 	root = Tk()
@@ -153,10 +285,10 @@ def calculate_rates(teams):
 		team.getFoulsData()
 		team.getCardsData()
 
-def getLeague():
+def getLeague(filename = sys.argv[1]):
 	teams = []
 	teams_index = 0
-	filename = sys.argv[1] + ".csv"
+	filename = filename + ".csv"
 	url = 'http://www.football-data.co.uk/mmz4281/1920/' + filename
 	urllib.request.urlretrieve(url,filename)
 
@@ -181,7 +313,7 @@ def getLeague():
 					teams_index += 1
 
 
-				g = game(hIndex,aIndex,row)
+				g = game(hIndex,aIndex,row,filename)
 				teams[hIndex].addGame(g)
 				teams[hIndex].pointsCalc_home(g)
 				teams[aIndex].addGame(g)
@@ -247,7 +379,7 @@ def print_game_info(home,away):
 
 
 ## -------------------------- MAIN ------------------------------------------ 
-if len(sys.argv) < 2:
+if sys.argv[1] == "-h":
 	print("Argument league expected\n")
 	print("E0 - Premier League")
 	print("E1 - Championship")
@@ -266,34 +398,34 @@ else:
 		if GUI == 1:
 			initGUI()
 		else:
-			txt = input("1-Goals Scored\n2-Goals Conceded\n3-Diffs\n4-Corners\n5-Shots\n6-Fouls\n7-Cards\n8-Shots accuracy\n9-Predict_scored\n10-Predict_conceded\na-Game analysis\n")
-			if txt is "1":
+			txt = input("0-Goals Scored\n1-Goals Conceded\n2-Diffs\n3-Corners\n4-Shots\n5-Fouls\n6-Cards\n7-Shots accuracy\n8-Predict_scored\n9-Predict_conceded\na-Game analysis\n")
+			if txt is "0":
 				graph_averages(sort_by_points(teams),"goalsScored","home")
 				graph_averages(sort_by_points(teams),"goalsScored","away")
 				graph_averages(sort_by_points(teams),"goalsScored","all")
-			elif txt is "2":
+			elif txt is "1":
 				graph_averages(sort_by_points(teams),"goalsConceded","home")
 				graph_averages(sort_by_points(teams),"goalsConceded","away")
 				graph_averages(sort_by_points(teams),"goalsConceded","all")
-			elif txt is "3":
+			elif txt is "2":
 				graph_averages(sort_by_points(teams),"diffs","home")
 				graph_averages(sort_by_points(teams),"diffs","away")
 				graph_averages(sort_by_points(teams),"diffs","all")
-			elif txt is "4":
+			elif txt is "3":
 				graph_averages(sort_by_points(teams),"corners","all")
-			elif txt is "5":
+			elif txt is "4":
 				graph_averages(sort_by_points(teams),"shots","all")
-			elif txt is "6":
+			elif txt is "5":
 				graph_averages(sort_by_points(teams),"fouls","all")
-			elif txt is "7":
+			elif txt is "6":
 				graph_averages(sort_by_points(teams),"cards","all")
-			elif txt is "8":
+			elif txt is "7":
 				graph_averages(sort_by_points(teams),"shots_acc","all")
-			elif txt is "9":
+			elif txt is "8":
 				h = input("HomeIndex ")
 				a = input("AwayIndex ")
 				predicts.predict_outcome(teams[int(h)],teams[int(a)],"scored")
-			elif txt is "10":
+			elif txt is "9":
 				h = input("HomeIndex ")
 				a = input("AwayIndex ")
 				predicts.predict_outcome(teams[int(h)],teams[int(a)],"conceded")
