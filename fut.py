@@ -21,65 +21,65 @@ class Application:
 		self.widget1 = Frame(master,width=1000, height=1000)
 		self.widget1.pack()
 		## Title
-		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league))
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
 		self.msg["font"] = ("Calibri", "50","bold")
-		self.msg.place(x=350,y=0)
+		self.msg.place(x=200,y=0)
 		## Scored
 		self.scored = Button(self.widget1)  
 		self.scored["text"] = "Scored"
 		self.scored["font"] = ("Calibri", "11")
 		self.scored["width"] = 12
 		self.scored.bind("<Button-1>", self.scored_func)
-		self.scored.place(x=400, y=200)
+		self.scored.place(x=500, y=200)
 		## Conceded
 		self.conceded = Button(self.widget1)
 		self.conceded["text"] = "Conceded"
 		self.conceded["font"] = ("Calibri", "11")
 		self.conceded["width"] = 12
 		self.conceded.bind("<Button-1>", self.conceded_func)
-		self.conceded.place(x=400, y=250)
+		self.conceded.place(x=500, y=250)
 		## Diffs
 		self.diffs = Button(self.widget1)
-		self.diffs["text"] = "Performance	"
+		self.diffs["text"] = "Performance"
 		self.diffs["font"] = ("Calibri", "11")
 		self.diffs["width"] = 12
 		self.diffs.bind("<Button-1>", self.diffs_func)
-		self.diffs.place(x=400, y=300)
+		self.diffs.place(x=500, y=300)
 		## Corners
 		self.corners = Button(self.widget1)
 		self.corners["text"] = "Corners"
 		self.corners["font"] = ("Calibri", "11")
 		self.corners["width"] = 12
 		self.corners.bind("<Button-1>", self.corners_func)
-		self.corners.place(x=400, y=350)
+		self.corners.place(x=500, y=350)
 		## Shots
 		self.shots = Button(self.widget1)
 		self.shots["text"] = "Shots"
 		self.shots["font"] = ("Calibri", "11")
 		self.shots["width"] = 12
 		self.shots.bind("<Button-1>", self.shots_func)
-		self.shots.place(x=400, y=400)
+		self.shots.place(x=500, y=400)
 		## Shots_acc
 		self.shots_acc = Button(self.widget1)
 		self.shots_acc["text"] = "Shots accuracy"
 		self.shots_acc["font"] = ("Calibri", "11")
 		self.shots_acc["width"] = 12
 		self.shots_acc.bind("<Button-1>", self.shots_acc_func)
-		self.shots_acc.place(x=400, y=450)
+		self.shots_acc.place(x=500, y=450)
 		## Fouls
 		self.fouls = Button(self.widget1)
 		self.fouls["text"] = "Fouls"
 		self.fouls["font"] = ("Calibri", "11")
 		self.fouls["width"] = 12
 		self.fouls.bind("<Button-1>", self.fouls_func)
-		self.fouls.place(x=400, y=500)
+		self.fouls.place(x=500, y=500)
 		## Shots_acc
 		self.cards = Button(self.widget1)
 		self.cards["text"] = "Cards"
 		self.cards["font"] = ("Calibri", "11")
 		self.cards["width"] = 12
 		self.cards.bind("<Button-1>", self.cards_func)
-		self.cards.place(x=400, y=550)
+		self.cards.place(x=500, y=550)
 
 		##LIGAS
 		N = 45
@@ -89,21 +89,21 @@ class Application:
 		self.liganos["font"] = ("Calibri", "11")
 		self.liganos["width"] = 14
 		self.liganos.bind("<Button-1>", self.liganos_func)
-		self.liganos.place(x=0, y=N)
+		self.liganos.place(x=0, y=8*N)
 		## premier_league
 		self.premier_league = Button(self.widget1)
-		self.premier_league["text"] = "Premier League"
+		self.premier_league["text"] = "Premier League" 
 		self.premier_league["font"] = ("Calibri", "11")
 		self.premier_league["width"] = 14
 		self.premier_league.bind("<Button-1>", self.premier_league_func)
-		self.premier_league.place(x=0, y=2*N)
+		self.premier_league.place(x=0, y=3*N)
 		## championship
 		self.championship = Button(self.widget1)
 		self.championship["text"] = "Championship"
 		self.championship["font"] = ("Calibri", "11")
 		self.championship["width"] = 14
 		self.championship.bind("<Button-1>", self.championship_func)
-		self.championship.place(x=0, y=3*N)
+		self.championship.place(x=150, y=3*N)
 		## La_Liga
 		self.La_Liga = Button(self.widget1)
 		self.La_Liga["text"] = "La Liga"
@@ -117,84 +117,84 @@ class Application:
 		self.La_Liga2["font"] = ("Calibri", "11")
 		self.La_Liga2["width"] = 14
 		self.La_Liga2.bind("<Button-1>", self.La_Liga2_func)
-		self.La_Liga2.place(x=0, y=5*N)
+		self.La_Liga2.place(x=150, y=4*N)
 		## SerieA
 		self.SerieA = Button(self.widget1)
 		self.SerieA["text"] = "Serie A"
 		self.SerieA["font"] = ("Calibri", "11")
 		self.SerieA["width"] = 14
 		self.SerieA.bind("<Button-1>", self.SerieA_func)
-		self.SerieA.place(x=0, y=6*N)
+		self.SerieA.place(x=0, y=5*N)
 		## SerieB
 		self.SerieB = Button(self.widget1)
 		self.SerieB["text"] = "Serie B"
 		self.SerieB["font"] = ("Calibri", "11")
 		self.SerieB["width"] = 14
 		self.SerieB.bind("<Button-1>", self.SerieB_func)
-		self.SerieB.place(x=0, y=7*N)
+		self.SerieB.place(x=150, y=5*N)
 		## Bundesliga
 		self.Bundesliga = Button(self.widget1)
 		self.Bundesliga["text"] = "Bundesliga"
 		self.Bundesliga["font"] = ("Calibri", "11")
 		self.Bundesliga["width"] = 14
 		self.Bundesliga.bind("<Button-1>", self.Bundesliga_func)
-		self.Bundesliga.place(x=0, y=8*N)
+		self.Bundesliga.place(x=0, y=6*N)
 		## Bundesliga2
 		self.Bundesliga2 = Button(self.widget1)
-		self.Bundesliga2["text"] = "Bundesliga2"
+		self.Bundesliga2["text"] = "Bundesliga 2"
 		self.Bundesliga2["font"] = ("Calibri", "11")
 		self.Bundesliga2["width"] = 14
 		self.Bundesliga2.bind("<Button-1>", self.Bundesliga2_func)
-		self.Bundesliga2.place(x=0, y=9*N)
+		self.Bundesliga2.place(x=150, y=6*N)
 		## Ligue 1
 		self.ligue1 = Button(self.widget1)
 		self.ligue1["text"] = "Ligue 1"
 		self.ligue1["font"] = ("Calibri", "11")
 		self.ligue1["width"] = 14
 		self.ligue1.bind("<Button-1>", self.ligue1_func)
-		self.ligue1.place(x=0, y=10*N)
+		self.ligue1.place(x=0, y=7*N)
 		## Ligue 2
 		self.ligue2 = Button(self.widget1)
 		self.ligue2["text"] = "Ligue 2"
 		self.ligue2["font"] = ("Calibri", "11")
 		self.ligue2["width"] = 14
 		self.ligue2.bind("<Button-1>", self.ligue2_func)
-		self.ligue2.place(x=0, y=11*N)
+		self.ligue2.place(x=150, y=7*N)
 		## Jupiler
 		self.ligue1 = Button(self.widget1)
 		self.ligue1["text"] = "Jupiler"
 		self.ligue1["font"] = ("Calibri", "11")
 		self.ligue1["width"] = 14
 		self.ligue1.bind("<Button-1>", self.jupiler_func)
-		self.ligue1.place(x=0, y=12*N)
+		self.ligue1.place(x=0, y=9*N)
 		## Eredivisie
 		self.ligue1 = Button(self.widget1)
 		self.ligue1["text"] = "Eredivisie"
 		self.ligue1["font"] = ("Calibri", "11")
 		self.ligue1["width"] = 14
 		self.ligue1.bind("<Button-1>", self.eredivisie_func)
-		self.ligue1.place(x=0, y=13*N)
+		self.ligue1.place(x=0, y=10*N)
 		## Greece
 		self.ligue1 = Button(self.widget1)
 		self.ligue1["text"] = "Greece"
 		self.ligue1["font"] = ("Calibri", "11")
 		self.ligue1["width"] = 14
 		self.ligue1.bind("<Button-1>", self.greece_func)
-		self.ligue1.place(x=0, y=14*N)
+		self.ligue1.place(x=0, y=11*N)
 		## Turkey
 		self.ligue1 = Button(self.widget1)
 		self.ligue1["text"] = "Turkey"
 		self.ligue1["font"] = ("Calibri", "11")
 		self.ligue1["width"] = 14
 		self.ligue1.bind("<Button-1>", self.turkey_func)
-		self.ligue1.place(x=0, y=15*N)
+		self.ligue1.place(x=0, y=12*N)
 		## EXIT
 		self.ligue1 = Button(self.widget1)
 		self.ligue1["text"] = "QUIT"
 		self.ligue1["font"] = ("Calibri", "14")
 		self.ligue1["width"] = 14
 		self.ligue1.bind("<Button-1>", self.exit_func)
-		self.ligue1.place(x=0, y=16*N)
+		self.ligue1.place(x=0, y=14*N)
 
 
   
@@ -225,31 +225,47 @@ class Application:
 	##Ligas
 	def liganos_func(self, event):
 		global teams
-		active_league = "Liga Nos"
+		active_league = "Liga NOS"
 		teams = getLeague("P1")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def premier_league_func(self, event):
 		global teams
-		active_league = "Premier League"
+		active_league = "Premier League" + "\t\t\t"
 		teams = getLeague("E0")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def championship_func(self, event):
 		global teams
 		active_league = "Championship"
 		teams = getLeague("E1") 
 		calculate_rates(teams)
-		print_teams(teams) 
+		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def premiership_func(self, event):
 		global teams
 		active_league = "Premiership"
 		teams = getLeague("SC0") 
 		calculate_rates(teams)
-		print_teams(teams)      
+		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)   
 
 	def La_Liga_func(self, event):
 		global teams
@@ -257,13 +273,21 @@ class Application:
 		teams = getLeague("SP1")
 		calculate_rates(teams)
 		print_teams(teams) 
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def La_Liga2_func(self, event):
 		global teams
 		active_league = "La Liga 2"
 		teams = getLeague("SP2")
 		calculate_rates(teams)
-		print_teams(teams) 
+		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0) 
 
 	def SerieA_func(self, event):
 		global teams
@@ -271,6 +295,10 @@ class Application:
 		teams = getLeague("I1")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def SerieB_func(self, event):
 		global teams
@@ -278,6 +306,10 @@ class Application:
 		teams = getLeague("I2")
 		calculate_rates(teams)
 		print_teams(teams) 
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
   
 	def Bundesliga_func(self, event):
 		global teams
@@ -285,6 +317,10 @@ class Application:
 		teams = getLeague("D1")
 		calculate_rates(teams)
 		print_teams(teams) 
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def Bundesliga2_func(self, event):
 		global teams
@@ -292,6 +328,10 @@ class Application:
 		teams = getLeague("D2")
 		calculate_rates(teams)
 		print_teams(teams) 
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def ligue1_func(self, event):
 		global teams
@@ -299,6 +339,10 @@ class Application:
 		teams = getLeague("F1")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def ligue2_func(self, event):
 		global teams
@@ -306,6 +350,10 @@ class Application:
 		teams = getLeague("F2")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def eredivisie_func(self, event):
 		global teams
@@ -313,6 +361,10 @@ class Application:
 		teams = getLeague("N1")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def jupiler_func(self, event):
 		global teams
@@ -320,6 +372,10 @@ class Application:
 		teams = getLeague("B1")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def greece_func(self, event):
 		global teams
@@ -327,6 +383,10 @@ class Application:
 		teams = getLeague("G1")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def turkey_func(self, event):
 		global teams
@@ -334,6 +394,10 @@ class Application:
 		teams = getLeague("T1")
 		calculate_rates(teams)
 		print_teams(teams)
+		## Title
+		self.msg = Label(self.widget1, text="SoccerStats:" + str(active_league) + "\t\t\t\t")
+		self.msg["font"] = ("Calibri", "50","bold")
+		self.msg.place(x=200,y=0)
 
 	def exit_func(self, event):
 		import sys

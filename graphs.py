@@ -61,7 +61,7 @@ def graph_goals_scored_complete(teams):
 	plt.plot(names,aux, label='avg')
 	plt.legend()
 	plt.title('Home Goals Scored ')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r', label='total')
@@ -73,7 +73,7 @@ def graph_goals_scored_complete(teams):
 	plt.plot(names,aux, label='average')
 	plt.title('Away Goals Scored ')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -102,14 +102,14 @@ def graph_goals_scored_complete_bar(teams):
 	plt.bar(names,teams_2ndH, bottom=teams_1stH, label='2nd Half Home')
 	plt.legend()
 	plt.title('Goals Scored ')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.bar(names,teams_1stA, label='1st Half Away')
 	plt.bar(names,teams_2ndA, bottom=teams_1stA, label='2nd Half Away')
 	#plt.title('Away Goals Scored ')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -148,7 +148,7 @@ def graph_goals_scored(teams,side):
 		aux.append(teams_1st_average)
 	#plt.plot(names,aux)
 	plt.title('1st Half Goals Scored ' + side)
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r')
@@ -157,7 +157,7 @@ def graph_goals_scored(teams,side):
 		aux.append(teams_2nd_average)
 	#plt.plot(names,aux)
 	plt.title('2nd Half Goals Scored ' + side)
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -191,7 +191,7 @@ def graph_goals_conceded_complete(teams):
 	plt.plot(names,aux, label='avg')
 	plt.legend()
 	plt.title('Home Goals Conceded ')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r', label='total')
@@ -203,7 +203,7 @@ def graph_goals_conceded_complete(teams):
 	plt.plot(names,aux, label='average')
 	plt.title('Away Goals Conceded ')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -232,14 +232,14 @@ def graph_goals_conceded_complete_bar(teams):
 	plt.bar(names,teams_2ndH, bottom=teams_1stH, label='2nd Half Home')
 	plt.legend()
 	plt.title('Goals Conceded ')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.bar(names,teams_1stA, label='1st Half Away')
 	plt.bar(names,teams_2ndA, bottom=teams_1stA, label='2nd Half Away')
 	#plt.title('Away Goals Conceded ')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -276,7 +276,7 @@ def graph_goals_conceded(teams,side):
 		aux.append(teams_1st_average)
 	#plt.plot(names,aux)
 	plt.title('1st Half Goals Conceded ' + side)
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r')
@@ -285,7 +285,7 @@ def graph_goals_conceded(teams,side):
 		aux.append(teams_2nd_average)
 	#plt.plot(names,aux)
 	plt.title('2nd Half Goals Conceded ' + side)
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -323,7 +323,7 @@ def graph_diffs(teams,side):
 		aux.append(teams_1st_average)
 	#plt.plot(names,aux)
 	plt.title('1st Half Performance ' + side)
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r')
@@ -332,7 +332,7 @@ def graph_diffs(teams,side):
 		aux.append(teams_2nd_average)
 	#plt.plot(names,aux)
 	plt.title('2nd Half Performance ' + side)
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -366,7 +366,7 @@ def graph_diffs_complete(teams):
 	plt.plot(names,aux, label='avg')
 	plt.legend()
 	plt.title('Home Performance ')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r', label='total')
@@ -378,7 +378,7 @@ def graph_diffs_complete(teams):
 	plt.plot(names,aux, label='average')
 	plt.title('Away Performance ')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -405,7 +405,7 @@ def graph_corners(teams):
 		aux.append(teams_1st_average)
 	#plt.plot(names,aux)
 	plt.title('Corners home')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r')
@@ -414,7 +414,7 @@ def graph_corners(teams):
 		aux.append(teams_2nd_average)
 	#plt.plot(names,aux)
 	plt.title('Corners away')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -435,12 +435,12 @@ def graph_corners_bar(teams):
 	plt.bar(names,teams_1st, label='Home')
 	plt.title('Corners')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.bar(names,teams_2nd, label='Away', color='orange')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -475,7 +475,7 @@ def graph_shots(teams):
 	#plt.plot(names,aux)
 	plt.title('Shots home')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r', label='shots')
@@ -486,7 +486,7 @@ def graph_shots(teams):
 	#plt.plot(names,aux)
 	plt.title('Shots away')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -513,14 +513,14 @@ def graph_shots_bar(teams):
 	plt.bar(names,teams_1stT, bottom=teams_1st, label='Shots on goal Home')
 	plt.legend()
 	plt.title('Shots ')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.bar(names,teams_2nd, label='Shots off goal Away')
 	plt.bar(names,teams_2ndT, bottom=teams_2nd, label='Shots on goal Away')
 	#plt.title('Away Goals Scored ')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -551,14 +551,14 @@ def graph_shots_acc(teams):
 	plt.bar(names,[teams_1stT[i]-teams_1st[i] for i in range(len(teams_1st))], bottom=teams_1st, label='Shots on goal Home')
 	plt.legend()
 	plt.title('Shots success percentage')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.bar(names,teams_2nd, label='Shots Away')
 	plt.bar(names,[teams_2ndT[i]-teams_2nd[i] for i in range(len(teams_2nd))], bottom=teams_2nd, label='Shots on goal Away')
 	#plt.title('Away Goals Scored ')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -588,7 +588,7 @@ def graph_shots_acc_bar(teams):
 	#plt.plot(names,aux)
 	plt.title('Shots accuracy home')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r', label='shots')
@@ -599,7 +599,7 @@ def graph_shots_acc_bar(teams):
 	#plt.plot(names,aux)
 	plt.title('Shots accuracy away')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -627,7 +627,7 @@ def graph_fouls(teams):
 	#plt.plot(names,aux)
 	plt.title('Fouls')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='r')
@@ -636,7 +636,7 @@ def graph_fouls(teams):
 		aux.append(teams_2nd_average)
 	#plt.plot(names,aux)
 	plt.title('Fouls away')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -657,12 +657,12 @@ def graph_fouls_bar(teams):
 	plt.bar(names,teams_1st, label='Home')
 	plt.title('Fouls')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.bar(names,teams_2nd, label='Away', color='orange')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -696,7 +696,7 @@ def graph_cards(teams):
 		aux.append(teams_1st_average)
 	#plt.plot(names,aux)
 	plt.title('Cards home')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.scatter(names,teams_2nd,c='y')
@@ -706,7 +706,7 @@ def graph_cards(teams):
 		aux.append(teams_2nd_average)
 	#plt.plot(names,aux)
 	plt.title('Cards away')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()
@@ -737,14 +737,14 @@ def graph_cards_bar(teams):
 	plt.bar(names,teams_1stT, bottom=teams_1st, color='r', label='Red Cards Home')
 	plt.legend()
 	plt.title('Cards ')
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	plt.subplot(2,1,2)
 	plt.bar(names,teams_2nd, color='y', label='Yellow Cards Away')
 	plt.bar(names,teams_2ndT, bottom=teams_2nd, color='r', label='Red Cards Away')
 	#plt.title('Away Goals Scored ')
 	plt.legend()
-	plt.xticks(fontsize=8, rotation=20)
+	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
 	manager.full_screen_toggle()

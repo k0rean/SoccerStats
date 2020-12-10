@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['fut.py'],
-             pathex=['C:\\Users\\resende\\Desktop\\SoccerStats-new'],
+             pathex=['C:\\Users\\resende\\Desktop\\GIT\\SoccerStats'],
              binaries=[],
              datas=[],
              hiddenimports=[],
