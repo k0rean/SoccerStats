@@ -1,15 +1,16 @@
 import sys
 
 class game:
-	def __init__(self,hIndex,aIndex,row):
+	def __init__(self,hIndex,aIndex,row,label):
 		self.hIndex = hIndex
 		self.aIndex = aIndex
 		self.hScore = int(row[5])
 		self.aScore = int(row[6])
+
 		self.hInt = int(row[8])
 		self.aInt = int(row[9])
 		## new data
-		if "E" in sys.argv[1]:
+		if "E" in label:
 			i = 1
 		else:
 			i = 0
@@ -22,3 +23,7 @@ class game:
 		self.aFouls = int(row[16+i])
 		self.hCorners = int(row[17+i])
 		self.aCorners = int(row[18+i])
+		self.hYellow = int(row[19+i])
+		self.aYellow = int(row[20+i])
+		self.hRed = int(row[21+i])
+		self.aRed = int(row[22+i])

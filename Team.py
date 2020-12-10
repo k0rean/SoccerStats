@@ -21,14 +21,10 @@ class team:
 		self.aRate_first = 0
 		self.aRate_second = 0
 		## Shots
-		self.hShots_first = 0
-		self.hShots_second = 0
-		self.aShots_first = 0
-		self.aShots_second = 0
-		self.hShotsT_first = 0
-		self.hShotsT_second = 0
-		self.aShotsT_first = 0
-		self.aShotsT_second = 0
+		self.hShots = 0
+		self.aShots = 0
+		self.hShotsT = 0
+		self.aShotsT = 0
 		## Corners
 		self.hCorners = 0
 		self.aCorners = 0
@@ -143,3 +139,84 @@ class team:
 
 		self.hCorners = hCorners / totalHGames
 		self.aCorners = aCorners / totalAGames
+
+	def getShotsData(self):
+		hShots = 0
+		aShots = 0
+		hShotsT = 0
+		aShotsT = 0
+		totalHGames = 0
+		totalAGames = 0
+		for game in reversed(self.gamesList): # for every game in record	
+			home = 0
+			if(self.index == game.hIndex): # discover if team played home or away
+				home = 1
+			elif (self.index != game.aIndex):
+				print("ERROR: This team didnt took part on this game")
+
+			# Register diff of goals between teams at first and second half
+			if home == 1:
+				totalHGames += 1
+				hShots += game.hShots
+				hShotsT += game.hShotsTarget
+			else:
+				totalAGames += 1
+				aShots += game.aShots
+				aShotsT += game.aShotsTarget
+
+		self.hShots = hShots / totalHGames
+		self.aShots = aShots / totalAGames
+		self.hShotsT = hShotsT / totalHGames
+		self.aShotsT = aShotsT / totalAGames
+
+	def getFoulsData(self):
+		hFouls = 0
+		aFouls = 0
+		totalHGames = 0
+		totalAGames = 0
+		for game in reversed(self.gamesList): # for every game in record	
+			home = 0
+			if(self.index == game.hIndex): # discover if team played home or away
+				home = 1
+			elif (self.index != game.aIndex):
+				print("ERROR: This team didnt took part on this game")
+
+			# Register diff of goals between teams at first and second half
+			if home == 1:
+				totalHGames += 1
+				hFouls += game.hFouls
+			else:
+				totalAGames += 1
+				aFouls += game.aFouls
+
+		self.hFouls = hFouls / totalHGames
+		self.aFouls = aFouls / totalAGames
+
+	def getCardsData(self):
+		hYellow = 0
+		aYellow = 0
+		hRed = 0
+		aRed = 0
+		totalHGames = 0
+		totalAGames = 0
+		for game in reversed(self.gamesList): # for every game in record	
+			home = 0
+			if(self.index == game.hIndex): # discover if team played home or away
+				home = 1
+			elif (self.index != game.aIndex):
+				print("ERROR: This team didnt took part on this game")
+
+			# Register diff of goals between teams at first and second half
+			if home == 1:
+				totalHGames += 1
+				hYellow += game.hYellow
+				hRed += game.hRed
+			else:
+				totalAGames += 1
+				aYellow += game.aYellow
+				aRed += game.aRed
+
+		self.hYellow = hYellow / totalHGames
+		self.aYellow = aYellow / totalAGames
+		self.hRed = hRed / totalHGames
+		self.aRed = aRed / totalAGames
