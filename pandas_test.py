@@ -36,7 +36,6 @@ def calculateStats(games):
 
 
 def calculateStatsTeam(teamHGames, teamAGames):
-	
 	teamName = teamHGames.iloc[0].HomeTeam
 
 	# HOME

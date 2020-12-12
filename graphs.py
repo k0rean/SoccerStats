@@ -1,162 +1,39 @@
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import plotly.express as px
+
+import pandas as pd
+
+import numpy as np
 
 
 mpl.rcParams['toolbar'] = 'None'
 fig = ""
 
-def graph_averages(teams,type,side):
-	if type is "diffs":
-		if side is "all":
-			graph_diffs_complete(teams)
-		else:
-			graph_diffs(teams,side)
-	elif type is "goalsScored":
-		if side is "all":
-			graph_goals_scored_complete_bar(teams)
-		else:
-			graph_goals_scored(teams,side)
-	elif type is "goalsConceded":
-		if side is "all":
-			graph_goals_conceded_complete_bar(teams)
-		else:
-			graph_goals_conceded(teams,side)
-	elif type is "corners":
-		graph_corners_bar(teams)
-	elif type is "shots":
-		graph_shots_bar(teams)
-	elif type is "shots_acc":
-		graph_shots_acc(teams)
-	elif type is "cards":
-		graph_cards_bar(teams)
-	elif type is "fouls":
-		graph_fouls_bar(teams)
 
-
-def graph_goals_scored_complete(teams):
-	teams_1st, teams_1stH, teams_1stA = [], [], []
-	teams_2nd, teams_2ndH, teams_2ndA = [], [], []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1stH.append(team.hScored_first)
-		teams_2ndH.append(team.hScored_second)
-		teams_1stA.append(team.aScored_first)
-		teams_2ndA.append(team.aScored_second)
-		teams_1st.append((team.hScored_first+team.hScored_second)/2)
-		teams_2nd.append((team.aScored_first+team.aScored_second)/2)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r', label='total')
-	plt.scatter(names,teams_1stH,c='g', label='1st')
-	plt.scatter(names,teams_2ndH,c='b', label='2nd')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	plt.plot(names,aux, label='avg')
-	plt.legend()
-	plt.title('Home Goals Scored ')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r', label='total')
-	plt.scatter(names,teams_1stA,c='g', label='1st')
-	plt.scatter(names,teams_2ndA,c='b', label='2nd')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	plt.plot(names,aux, label='average')
-	plt.title('Away Goals Scored ')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_goals_scored_complete_bar(teams):
-	teams_1st, teams_1stH, teams_1stA = [], [], []
-	teams_2nd, teams_2ndH, teams_2ndA = [], [], []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1stH.append(team.hScored_first)
-		teams_2ndH.append(team.hScored_second)
-		teams_1stA.append(team.aScored_first)
-		teams_2ndA.append(team.aScored_second)
-		teams_1st.append((team.hScored_first+team.hScored_second)/2)
-		teams_2nd.append((team.aScored_first+team.aScored_second)/2)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.bar(names,teams_1stH, label='1st Half Home')
-	plt.bar(names,teams_2ndH, bottom=teams_1stH, label='2nd Half Home')
-	plt.legend()
-	plt.title('Goals Scored ')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.bar(names,teams_1stA, label='1st Half Away')
-	plt.bar(names,teams_2ndA, bottom=teams_1stA, label='2nd Half Away')
-	#plt.title('Away Goals Scored ')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-
-def graph_goals_scored(teams,side):
-	teams_1st = []
-	teams_2nd = []
-	names = []
-		
-	if side is "home":
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append(team.hScored_first)
-			teams_2nd.append(team.hScored_second)
-	elif side is "away":
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append(team.aScored_first)
-			teams_2nd.append(team.aScored_second)
+def graph_goals(df, str):
+	teams = df.Team.to_list()
+	if "Scored" in str:
+		hGoals1 = df.HScored1H.to_list()
+		hGoals2 = df.HScored2H.to_list()
+		aGoals1 = df.AScored1H.to_list()
+		aGoals2 = df.AScored2H.to_list()
 	else:
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append((team.hScored_first+team.aScored_first)/2)
-			teams_2nd.append((team.hScored_second+team.aScored_second)/2)
+		hGoals1 = df.HConceded1H.to_list()
+		hGoals2 = df.HConceded2H.to_list()
+		aGoals1 = df.AConceded1H.to_list()
+		aGoals2 = df.AConceded2H.to_list()
 
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	#plt.plot(names,aux)
-	plt.title('1st Half Goals Scored ' + side)
+	plt.subplot(211)
+	plt.bar(teams,hGoals1, label='1st Half Home')
+	plt.bar(teams,hGoals2, bottom=hGoals1, label='2nd Half Home')
+	plt.legend(prop={'size': 8})
+	plt.title(str)
 	plt.xticks(fontsize=10, rotation=20)
 
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	#plt.plot(names,aux)
-	plt.title('2nd Half Goals Scored ' + side)
+	plt.subplot(212)
+	plt.bar(teams,aGoals1, label='1st Half Away')
+	plt.bar(teams,aGoals2, bottom=aGoals1, label='2nd Half Away')
+	plt.legend(prop={'size': 8})
 	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
@@ -164,127 +41,49 @@ def graph_goals_scored(teams,side):
 	plt.show()
 
 
-def graph_goals_conceded_complete(teams):
-	teams_1st, teams_1stH, teams_1stA = [], [], []
-	teams_2nd, teams_2ndH, teams_2ndA = [], [], []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1stH.append(team.hConceded_first)
-		teams_2ndH.append(team.hConceded_second)
-		teams_1stA.append(team.aConceded_first)
-		teams_2ndA.append(team.aConceded_second)
-		teams_1st.append((team.hConceded_first+team.hConceded_second)/2)
-		teams_2nd.append((team.aConceded_first+team.aConceded_second)/2)
+def graph_situations(df,str):
+	teams = df.Team.to_list()
+	if "Corners" in str:
+		hCorners1 = df.HCornersFavor.to_list()
+		hCorners2 = df.HCornersAgainst.to_list()
+		aCorners1 = df.ACornersFavor.to_list()
+		aCorners2 = df.ACornersAgainst.to_list()
+	elif "Fouls" in str:
+		hFouls1 = df.HFoulsCommited.to_list()
+		hFouls2 = df.HFoulsSuffered.to_list()
+		aFouls1 = df.AFoulsCommited.to_list()
+		aFouls2 = df.AFoulsSuffered.to_list()
+	elif "Performance" in str:
+		hPerf1 = df.HScored1H.sub(df.HConceded1H, axis = 0).to_list()
+		hPerf2 = df.HScored2H.sub(df.HConceded2H, axis = 0).to_list()
+		aPerf1 = df.AScored1H.sub(df.AConceded1H, axis = 0).to_list()
+		aPerf2 = df.AScored2H.sub(df.AConceded2H, axis = 0).to_list()
 
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r', label='total')
-	plt.scatter(names,teams_1stH,c='g', label='1st')
-	plt.scatter(names,teams_2ndH,c='b', label='2nd')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	plt.plot(names,aux, label='avg')
-	plt.legend()
-	plt.title('Home Goals Conceded ')
+	plt.subplot(211)
+	if "Corners" in str:
+		subcategorybar(teams, [hCorners1,hCorners2])
+		plt.legend(('Home Corners in favor', 'Home Corners Against'), prop={'size': 8})
+	elif "Fouls" in str:
+		subcategorybar(teams, [hFouls1,hFouls2])
+		plt.legend(('Home Fouls Commited', 'Home Fouls Suffered'), prop={'size': 8})
+	elif "Performance" in str:
+		subcategorybar(teams, [hPerf1,hPerf2], 0.6)
+		plt.legend(('Home Performance 1Half', 'Home Performance 2Half'), prop={'size': 8})
+		plt.axhline(y=0, color='black', linestyle='-')
+	plt.title(str)
 	plt.xticks(fontsize=10, rotation=20)
 
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r', label='total')
-	plt.scatter(names,teams_1stA,c='g', label='1st')
-	plt.scatter(names,teams_2ndA,c='b', label='2nd')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	plt.plot(names,aux, label='average')
-	plt.title('Away Goals Conceded ')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_goals_conceded_complete_bar(teams):
-	teams_1st, teams_1stH, teams_1stA = [], [], []
-	teams_2nd, teams_2ndH, teams_2ndA = [], [], []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1stH.append(team.hConceded_first)
-		teams_2ndH.append(team.hConceded_second)
-		teams_1stA.append(team.aConceded_first)
-		teams_2ndA.append(team.aConceded_second)
-		teams_1st.append((team.hConceded_first+team.hConceded_second)/2)
-		teams_2nd.append((team.aConceded_first+team.aConceded_second)/2)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.bar(names,teams_1stH, label='1st Half Home')
-	plt.bar(names,teams_2ndH, bottom=teams_1stH, label='2nd Half Home')
-	plt.legend()
-	plt.title('Goals Conceded ')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.bar(names,teams_1stA, label='1st Half Away')
-	plt.bar(names,teams_2ndA, bottom=teams_1stA, label='2nd Half Away')
-	#plt.title('Away Goals Conceded ')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-def graph_goals_conceded(teams,side):
-	teams_1st = []
-	teams_2nd = []
-	names = []
-
-	if side is "home":
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append(team.hConceded_first)
-			teams_2nd.append(team.hConceded_second)
-	elif side is "away":
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append(team.aConceded_first)
-			teams_2nd.append(team.aConceded_second)
-	else:
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append((team.hConceded_first+team.aConceded_first)/2)
-			teams_2nd.append((team.hConceded_second+team.aConceded_second)/2)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	#plt.plot(names,aux)
-	plt.title('1st Half Goals Conceded ' + side)
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	#plt.plot(names,aux)
-	plt.title('2nd Half Goals Conceded ' + side)
+	plt.subplot(212)
+	if "Corners" in str:
+		subcategorybar(teams, [aCorners1,aCorners2])
+		plt.legend(('Away Corners in favor', 'Away Corners Against'), prop={'size': 8})
+	elif "Fouls" in str:
+		subcategorybar(teams, [aFouls1,aFouls2])
+		plt.legend(('Away Fouls Commited', 'Away Fouls Suffered'), prop={'size': 8})
+	elif "Performance" in str:
+		subcategorybar(teams, [aPerf1,aPerf2], 0.6)
+		plt.legend(('Away Performance 1Half', 'Away Performance 2Half'), prop={'size': 8})
+		plt.axhline(y=0, color='black', linestyle='-')
 	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
@@ -292,92 +91,55 @@ def graph_goals_conceded(teams,side):
 	plt.show()
 
 
-def graph_diffs(teams,side):
-	teams_1st = []
-	teams_2nd = []
-	names = []
+def subcategorybar(X, vals, width=0.8):
+    n = len(vals)
+    _X = np.arange(len(X))
+    for i in range(n):
+        plt.bar(_X - width/2. + i/float(n)*width, vals[i], 
+                width=width/float(n), align="edge")   
+    plt.xticks(_X, X)
 
-	if side is "home":
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append(team.hRate_first)
-			teams_2nd.append(team.hRate_second)
-	elif side is "away":
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append(team.aRate_first)
-			teams_2nd.append(team.aRate_second)
-	else:
-		for team in teams:
-			names.append(team.name)
-			teams_1st.append((team.hRate_first+team.aRate_first)/2)
-			teams_2nd.append((team.hRate_second+team.aRate_second)/2)
 
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
+def graph_situations_stack(df,str):
+	teams = df.Team.to_list()
+	if "Shots" in str:
+		hShots1 = df.HShotsFavor.to_list()
+		hShots2 = df.HShotsAgainst.to_list()
+		aShots1 = df.AShotsFavor.to_list()
+		aShots2 = df.AShotsAgainst.to_list()
+		# target
+		hShotsT1 = df.HShotsTFavor.to_list()
+		hShotsT2 = df.HShotsTAgainst.to_list()
+		aShotsT1 = df.AShotsTFavor.to_list()
+		aShotsT2 = df.AShotsTAgainst.to_list()
+	elif "Cards" in str:
+		hYellow1 = df.HYellowFavor.to_list()
+		hYellow2 = df.HYellowAgainst.to_list()
+		aYellow1 = df.AYellowFavor.to_list()
+		aYellow2 = df.AYellowAgainst.to_list()
+		#Red
+		hRed1 = df.HRedFavor.to_list()
+		hRed2 = df.HRedAgainst.to_list()
+		aRed1 = df.ARedFavor.to_list()
+		aRed2 = df.ARedAgainst.to_list()
 
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	#plt.plot(names,aux)
-	plt.title('1st Half Performance ' + side)
+	plt.subplot(211)
+	if "Shots" in str:
+		subcategorybar_stack(teams, [hShots1,hShots2], [hShotsT1,hShotsT2])
+		plt.legend(('Home Shots in favor', 'Home Shots on target in favor', 'Home Shots against', 'Home Shots on target against'), prop={'size': 8})
+	elif "Cards" in str:
+		subcategorybar_stack(teams, [hYellow1,hYellow2], [hRed1,hRed2])
+		plt.legend(('Home Yellows in favor', 'Home Reds in favor', 'Home Yellows against', 'Home Reds against'), prop={'size': 8})
+	plt.title(str)
 	plt.xticks(fontsize=10, rotation=20)
 
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	#plt.plot(names,aux)
-	plt.title('2nd Half Performance ' + side)
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_diffs_complete(teams):
-	teams_1st, teams_1stH, teams_1stA = [], [], []
-	teams_2nd, teams_2ndH, teams_2ndA = [], [], []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1stH.append(team.hRate_first)
-		teams_2ndH.append(team.hRate_second)
-		teams_1stA.append(team.aRate_first)
-		teams_2ndA.append(team.aRate_second)
-		teams_1st.append((team.hRate_first+team.hRate_second)/2)
-		teams_2nd.append((team.aRate_first+team.aRate_second)/2)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r', label='total')
-	plt.scatter(names,teams_1stH,c='g', label='1st')
-	plt.scatter(names,teams_2ndH,c='b', label='2nd')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	plt.plot(names,aux, label='avg')
-	plt.legend()
-	plt.title('Home Performance ')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r', label='total')
-	plt.scatter(names,teams_1stA,c='g', label='1st')
-	plt.scatter(names,teams_2ndA,c='b', label='2nd')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	plt.plot(names,aux, label='average')
-	plt.title('Away Performance ')
-	plt.legend()
+	plt.subplot(212)
+	if "Shots" in str:
+		subcategorybar_stack(teams, [aShots1,aShots2], [aShotsT1,aShotsT2])
+		plt.legend(('Away Shots in favor', 'Away Shots on target in favor', 'Away Shots against', 'Away Shots on target against'), prop={'size': 8})
+	elif "Cards" in str:
+		subcategorybar_stack(teams, [hYellow1,hYellow2], [hRed1,hRed2])
+		plt.legend(('Away Yellows in favor', 'Away Reds in favor', 'Away Yellows against', 'Away Reds against'), prop={'size': 8})
 	plt.xticks(fontsize=10, rotation=20)
 
 	manager = plt.get_current_fig_manager()
@@ -385,367 +147,14 @@ def graph_diffs_complete(teams):
 	plt.show()
 
 
-def graph_corners(teams):
-	teams_1st = []
-	teams_2nd = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(team.hCorners)
-		teams_2nd.append(team.aCorners)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	#plt.plot(names,aux)
-	plt.title('Corners home')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	#plt.plot(names,aux)
-	plt.title('Corners away')
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
+def subcategorybar_stack(X, vals1, vals2, width=0.8):
+    n = len(vals1)
+    _X = np.arange(len(X))
+    for i in range(n):
+        plt.bar(_X - width/2. + i/float(n)*width, vals1[i],
+                width=width/float(n), align="edge")
+        plt.bar(_X - width/2. + i/float(n)*width, vals2[i],
+                width=width/float(n), align="edge", bottom=vals1[i])
+    plt.xticks(_X, X)
 
 
-def graph_corners_bar(teams):
-	teams_1st = []
-	teams_2nd = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(team.hCorners)
-		teams_2nd.append(team.aCorners)
-
-	plt.subplot(2,1,1)
-	plt.bar(names,teams_1st, label='Home')
-	plt.title('Corners')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.bar(names,teams_2nd, label='Away', color='orange')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_shots(teams):
-	teams_1st = []
-	teams_2nd = []
-	teams_1stT = []
-	teams_2ndT = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(team.hShots)
-		teams_2nd.append(team.aShots)
-		teams_1stT.append(team.hShotsT)
-		teams_2ndT.append(team.aShotsT)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-	teams_1stT_average = sum(teams_1stT)/len(teams_1st)
-	teams_2ndT_average = sum(teams_2ndT)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r', label='shots')
-	plt.scatter(names,teams_1stT,c='b', label='shots on goal')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	#plt.plot(names,aux)
-	plt.title('Shots home')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r', label='shots')
-	plt.scatter(names,teams_2ndT,c='b', label='shots on goal')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	#plt.plot(names,aux)
-	plt.title('Shots away')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_shots_bar(teams):
-	teams_1st = []
-	teams_2nd = []
-	teams_1stT = []
-	teams_2ndT = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(team.hShots-team.hShotsT)
-		teams_2nd.append(team.aShots-team.aShotsT)
-		teams_1stT.append(team.hShotsT)
-		teams_2ndT.append(team.aShots)
-
-
-	plt.subplot(2,1,1)
-	plt.bar(names,teams_1st, label='Shots off goal Home')
-	plt.bar(names,teams_1stT, bottom=teams_1st, label='Shots on goal Home')
-	plt.legend()
-	plt.title('Shots ')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.bar(names,teams_2nd, label='Shots off goal Away')
-	plt.bar(names,teams_2ndT, bottom=teams_2nd, label='Shots on goal Away')
-	#plt.title('Away Goals Scored ')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_shots_acc(teams):
-	teams_1st = []
-	teams_2nd = []
-	teams_1stT = []
-	teams_2ndT = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(100*((team.hScored_first+team.hScored_second)/team.hShots))
-		teams_2nd.append(100*((team.aScored_first+team.aScored_second)/team.aShots))
-		teams_1stT.append(100*((team.hScored_first+team.hScored_second)/team.hShotsT))
-		teams_2ndT.append(100*((team.aScored_first+team.aScored_second)/team.aShotsT))
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-	teams_1stT_average = sum(teams_1stT)/len(teams_1st)
-	teams_2ndT_average = sum(teams_2ndT)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.bar(names,teams_1st, label='Shots Home')
-	plt.bar(names,[teams_1stT[i]-teams_1st[i] for i in range(len(teams_1st))], bottom=teams_1st, label='Shots on goal Home')
-	plt.legend()
-	plt.title('Shots success percentage')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.bar(names,teams_2nd, label='Shots Away')
-	plt.bar(names,[teams_2ndT[i]-teams_2nd[i] for i in range(len(teams_2nd))], bottom=teams_2nd, label='Shots on goal Away')
-	#plt.title('Away Goals Scored ')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_shots_acc_bar(teams):
-	teams_1st = []
-	teams_2nd = []
-	teams_1stT = []
-	teams_2ndT = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(100*((team.hScored_first+team.hScored_second)/team.hShots))
-		teams_2nd.append(100*((team.aScored_first+team.aScored_second)/team.aShots))
-		teams_1stT.append(100*((team.hScored_first+team.hScored_second)/team.hShotsT))
-		teams_2ndT.append(100*((team.aScored_first+team.aScored_second)/team.aShotsT))
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r', label='shots')
-	plt.scatter(names,teams_1stT,c='b', label='shots on goal')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	#plt.plot(names,aux)
-	plt.title('Shots accuracy home')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r', label='shots')
-	plt.scatter(names,teams_2ndT,c='b', label='shots on goal')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	#plt.plot(names,aux)
-	plt.title('Shots accuracy away')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_fouls(teams):
-	teams_1st = []
-	teams_2nd = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(team.hFouls)
-		teams_2nd.append(team.aFouls)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='r')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	#plt.plot(names,aux)
-	plt.title('Fouls')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='r')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	#plt.plot(names,aux)
-	plt.title('Fouls away')
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_fouls_bar(teams):
-	teams_1st = []
-	teams_2nd = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(team.hFouls)
-		teams_2nd.append(team.aFouls)
-
-	plt.subplot(2,1,1)
-	plt.bar(names,teams_1st, label='Home')
-	plt.title('Fouls')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.bar(names,teams_2nd, label='Away', color='orange')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_cards(teams):
-	teams_1st = []
-	teams_2nd = []
-	teams_1stT = []
-	teams_2ndT = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(team.hYellow)
-		teams_2nd.append(team.aYellow)
-		teams_1stT.append(team.hRed)
-		teams_2ndT.append(team.aRed)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-	teams_1stT_average = sum(teams_1stT)/len(teams_1st)
-	teams_2ndT_average = sum(teams_2ndT)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.scatter(names,teams_1st,c='y')
-	plt.scatter(names,teams_1stT,c='r')
-	aux = []
-	for item in teams_1st:
-		aux.append(teams_1st_average)
-	#plt.plot(names,aux)
-	plt.title('Cards home')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.scatter(names,teams_2nd,c='y')
-	plt.scatter(names,teams_2ndT,c='r')
-	aux = []
-	for item in teams_2nd:
-		aux.append(teams_2nd_average)
-	#plt.plot(names,aux)
-	plt.title('Cards away')
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
-
-
-def graph_cards_bar(teams):
-	teams_1st = []
-	teams_2nd = []
-	teams_1stT = []
-	teams_2ndT = []
-	names = []
-		
-	for team in teams:
-		names.append(team.name)
-		teams_1st.append(team.hYellow)
-		teams_2nd.append(team.aYellow)
-		teams_1stT.append(team.hRed)
-		teams_2ndT.append(team.aRed)
-
-	teams_1st_average = sum(teams_1st)/len(teams_1st)
-	teams_2nd_average = sum(teams_2nd)/len(teams_2nd)
-	teams_1stT_average = sum(teams_1stT)/len(teams_1st)
-	teams_2ndT_average = sum(teams_2ndT)/len(teams_2nd)
-
-	plt.subplot(2,1,1)
-	plt.bar(names,teams_1st, color='y', label='Yellow Cards Home')
-	plt.bar(names,teams_1stT, bottom=teams_1st, color='r', label='Red Cards Home')
-	plt.legend()
-	plt.title('Cards ')
-	plt.xticks(fontsize=10, rotation=20)
-
-	plt.subplot(2,1,2)
-	plt.bar(names,teams_2nd, color='y', label='Yellow Cards Away')
-	plt.bar(names,teams_2ndT, bottom=teams_2nd, color='r', label='Red Cards Away')
-	#plt.title('Away Goals Scored ')
-	plt.legend()
-	plt.xticks(fontsize=10, rotation=20)
-
-	manager = plt.get_current_fig_manager()
-	manager.full_screen_toggle()
-	plt.show()
