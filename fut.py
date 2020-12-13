@@ -11,11 +11,13 @@ from graphs import *
 
 root = ""
 t1, t2 = "", ""
-w3, w4 = "", ""
+w3, w4, w5 = "", "", ""
 active_league = "Premier League"
 active_year = "20/21"
 league_games = ""
 league_stats = ""
+sortBy = ""
+sort_options = ['Points', 'HPoints', 'APoints', 'Scored', 'Conceded', 'Shots', 'Corners', 'OEff', 'DEff']
 
 h_team_vs, aTeam_vs = "", ""
 
@@ -38,12 +40,12 @@ league_codes = {'Premier League': 'E0',
 
 x_buttons_league = 150
 x_buttons_stats = 330
-N = 45
+N = 30
 
 
 class Application:
 	def __init__(self, master=None):
-		global t1, t2, w3, w4
+		global t1, t2, w3, w4, w5
 
 		self.widget1 = Frame(master,width=1400, height=1200)
 		self.widget1.grid_rowconfigure(0, weight=1)
@@ -91,6 +93,12 @@ class Application:
 		aTeam_vs.set(teams[1])
 		w4 = ttk.OptionMenu(master, aTeam_vs, teams[1], *teams)
 		w4.place(x=1100, y=4*N)	
+
+		global sortBy
+		sortBy = StringVar(master)
+		sortBy.set(sort_options[0])
+		w5 = ttk.OptionMenu(master, sortBy, sort_options[0], *sort_options)
+		w5.place(x=1100, y=7*N)
 	
 		# STATS
 		## Scored
@@ -159,6 +167,20 @@ class Application:
 		self.liganos.bind("<Button-1>", self.getMatch_func)
 		self.liganos.place(x=1100, y=5*N)
 
+		## get match
+		self.liganos = Button(self.widget1, bg='green')
+		self.liganos["text"] = "Get Table"
+		self.liganos["width"] = 15
+		self.liganos.bind("<Button-1>", self.getTable_func)
+		self.liganos.place(x=1100, y=8*N)
+
+		## Home
+		self.ligue1 = Button(self.widget1)
+		self.ligue1["text"] = "Sort Table"
+		self.ligue1["width"] = 10
+		self.ligue1.bind("<Button-1>", self.dummy_func)
+		self.ligue1.place(x=1000, y=7*N)
+
 		## Home
 		self.ligue1 = Button(self.widget1)
 		self.ligue1["text"] = "Home"
@@ -178,7 +200,7 @@ class Application:
 		self.ligue1["text"] = "QUIT"
 		self.ligue1["width"] = 15
 		self.ligue1.bind("<Button-1>", self.exit_func)
-		self.ligue1.place(x=20, y=16*N)
+		self.ligue1.place(x=20, y=24*N)
 
 
 	### Metodos dos butoes  
@@ -207,7 +229,6 @@ class Application:
 	def dummy_func(self, event):
 		pass
 
-
 	def getLeague_func(self, event):
 		global league_games
 		global league_stats
@@ -226,6 +247,8 @@ class Application:
 	def getMatch_func(self, event):
 		print_match_metrics()
 
+	def getTable_func(self, event):
+		print_table_sorted()
 
 	def exit_func(self, event):
 		import sys
@@ -286,7 +309,7 @@ def print_table():
 	_df = league_stats.copy(deep=True)
 	_df['Pts'] = _df['HPoints'] + _df['APoints']
 	_df['GD'] = (((_df['HScored1H'] + _df['HScored2H'] - _df['HConceded1H'] - _df['HConceded2H']) * _df['HGames']) + \
-					  ((_df['AScored1H'] + _df['AScored2H'] - _df['AConceded1H'] - _df['AConceded2H']) * _df['AGames'])).astype('float').round(0).astype('int')
+				 ((_df['AScored1H'] + _df['AScored2H'] - _df['AConceded1H'] - _df['AConceded2H']) * _df['AGames'])).astype('float').round(0).astype('int')
 	_df = _df[['Team', 'W', 'D', 'L', 'GD', 'Pts']]
 	_df.index = _df.index + 1
 	_df.index.name = '#'
@@ -317,6 +340,33 @@ def print_league_metrics():
 		t2.insert(END, tabulate(_df_metrics, headers='keys', tablefmt='psql'))
 
 
+def print_table_sorted():
+	global sortBy
+	global league_stats
+	global t1
+	_df = league_stats.copy(deep=True)
+	_df['Scored'] = (_df.HScored1H +_df.HScored2H)*_df.HGames + (_df.AScored1H +_df.AScored2H)*_df.AGames
+	_df['Conceded'] = (_df.HConceded1H +_df.HConceded2H)*_df.HGames + (_df.AConceded1H +_df.AConceded2H)*_df.AGames
+	_df['Points'] = _df.HPoints + _df.APoints
+	_df['Shots'] = (_df.HShotsFavor*_df.HGames + _df.AShotsFavor*_df.AGames) / (_df.HGames + _df.AGames)
+	_df['Corners'] = (_df.HCornersFavor*_df.HGames + _df.ACornersFavor*_df.AGames) / (_df.HGames + _df.AGames)
+	_df['OEff'] = (((_df.HScored1H+_df.HScored2H)/(_df.HShotsFavor + _df.HCornersFavor))*_df.HGames + \
+		((_df.AScored1H+_df.AScored2H)/(_df.AShotsFavor + _df.ACornersFavor))*_df.AGames)/(_df.HGames+_df.AGames)
+	_df['DEff'] = (((_df.HConceded1H+_df.HConceded2H)/(_df.HShotsAgainst + _df.HCornersAgainst))*_df.HGames + \
+		((_df.AConceded1H+_df.AConceded2H)/(_df.AShotsAgainst + _df.ACornersAgainst))*_df.AGames)/(_df.HGames+_df.AGames)
+
+	bool_var = False
+	if sortBy.get() == 'Conceded' or sortBy.get() == 'DEff':
+		bool_var = True
+
+	_df = _df[['Team', sortBy.get()]]
+	_df = _df.sort_values(sortBy.get(), ascending=bool_var).reset_index(drop=True)
+	_df.index = _df.index + 1
+	if not type(t1) is str:	
+		t1.delete('1.0', END)
+		t1.insert(END, tabulate(_df, headers='keys', tablefmt='psql'))
+
+
 def print_match_metrics():
 	global t1
 	global hTeam_vs, aTeam_vs
@@ -333,6 +383,14 @@ def print_match_metrics():
 	Aser = _df.sort_values('APoints_game', ascending=False).Team.reset_index(drop=True)
 	aARank = Aser[Aser==aTeam_vs.get()].index[0]+1
 	# Rank Goals S/C
+	_df['Scored'] = (_df.HScored1H +_df.HScored2H)*_df.HGames + (_df.AScored1H +_df.AScored2H)*_df.AGames
+	Hser = _df.sort_values('Scored', ascending=False).Team.reset_index(drop=True)
+	hGSRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	aGSRank = Hser[Hser==aTeam_vs.get()].index[0]+1
+	_df['Conceded'] = (_df.HConceded1H +_df.HConceded2H)*_df.HGames + (_df.AConceded1H +_df.AConceded2H)*_df.AGames
+	Hser = _df.sort_values('Conceded', ascending=True).Team.reset_index(drop=True)
+	hGCRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	aGCRank = Hser[Hser==aTeam_vs.get()].index[0]+1
 	_df['HScored'] = _df.HScored1H +_df.HScored2H
 	Hser = _df.sort_values('HScored', ascending=False).Team.reset_index(drop=True)
 	hHGSRank = Hser[Hser==hTeam_vs.get()].index[0]+1
@@ -341,63 +399,89 @@ def print_match_metrics():
 	hHGCRank = Hser[Hser==hTeam_vs.get()].index[0]+1
 	_df['AScored'] = _df.AScored1H+_df.AScored2H
 	Aser = _df.sort_values('AScored', ascending=False).Team.reset_index(drop=True)
-	aHGSRank = Aser[Aser==aTeam_vs.get()].index[0]+1
+	aAGSRank = Aser[Aser==aTeam_vs.get()].index[0]+1
 	_df['AConceded'] = _df.AConceded1H+_df.AConceded2H
 	Aser = _df.sort_values('AConceded', ascending=True).Team.reset_index(drop=True)
-	aHGCRank = Aser[Aser==aTeam_vs.get()].index[0]+1
+	aAGCRank = Aser[Aser==aTeam_vs.get()].index[0]+1
 	# Rank 1H/2H
+	_df['1Half'] = (_df.HScored1H - _df.HConceded1H)*_df.HGames + (_df.AScored1H - _df.AConceded1H)*_df.AGames
+	Hser = _df.sort_values('1Half', ascending=False).Team.reset_index(drop=True)
+	h1HRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	a1HRank = Hser[Hser==aTeam_vs.get()].index[0]+1
+	_df['2Half'] = (_df.HScored2H - _df.HConceded2H)*_df.HGames + (_df.AScored2H - _df.AConceded2H)*_df.AGames
+	Hser = _df.sort_values('2Half', ascending=False).Team.reset_index(drop=True)
+	h2HRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	a2HRank = Hser[Hser==aTeam_vs.get()].index[0]+1
 	_df['H1Half'] = _df.HScored1H - _df.HConceded1H
 	Hser = _df.sort_values('H1Half', ascending=False).Team.reset_index(drop=True)
-	h1HRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	h1HRankH = Hser[Hser==hTeam_vs.get()].index[0]+1
 	_df['H2Half'] = _df.HScored2H - _df.HConceded2H
 	Hser = _df.sort_values('H2Half', ascending=False).Team.reset_index(drop=True)
-	h2HRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	h2HRankH = Hser[Hser==hTeam_vs.get()].index[0]+1
 	_df['A1Half'] = _df.AScored1H - _df.AConceded1H
 	Aser = _df.sort_values('A1Half', ascending=False).Team.reset_index(drop=True)
-	a1HRank = Aser[Aser==aTeam_vs.get()].index[0]+1
+	a1HRankA = Aser[Aser==aTeam_vs.get()].index[0]+1
 	_df['A2Half'] = _df.AScored2H - _df.AConceded2H
 	Aser = _df.sort_values('A2Half', ascending=False).Team.reset_index(drop=True)
-	a2HRank = Aser[Aser==aTeam_vs.get()].index[0]+1
+	a2HRankA = Aser[Aser==aTeam_vs.get()].index[0]+1
 	# Rank Shots H/A
-	Hser = _df.sort_values('HShotsFavor', ascending=False).Team.reset_index(drop=True)
+	_df['Shots'] = _df.HShotsFavor*_df.HGames + _df.AShotsFavor*_df.AGames
+	Hser = _df.sort_values('Shots', ascending=False).Team.reset_index(drop=True)
 	hSRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	aSRank = Hser[Hser==aTeam_vs.get()].index[0]+1
+	Hser = _df.sort_values('HShotsFavor', ascending=False).Team.reset_index(drop=True)
+	hHSRank = Hser[Hser==hTeam_vs.get()].index[0]+1
 	Aser = _df.sort_values('AShotsFavor', ascending=False).Team.reset_index(drop=True)
-	aSRank = Aser[Aser==aTeam_vs.get()].index[0]+1
+	aASRank = Aser[Aser==aTeam_vs.get()].index[0]+1
 	# Efficiency Ofensive Defensive
+	_df['OEff'] = (((_df.HScored1H+_df.HScored2H)/(_df.HShotsFavor + _df.HCornersFavor))*_df.HGames + \
+		((_df.AScored1H+_df.AScored2H)/(_df.AShotsFavor + _df.ACornersFavor))*_df.AGames)/(_df.HGames+_df.AGames)
+	Hser = _df.sort_values('OEff', ascending=False).Team.reset_index(drop=True)
+	hORank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	aORank = Hser[Hser==aTeam_vs.get()].index[0]+1
+	#
+	_df['DEff'] = (((_df.HConceded1H+_df.HConceded2H)/(_df.HShotsAgainst + _df.HCornersAgainst))*_df.HGames + \
+		((_df.AConceded1H+_df.AConceded2H)/(_df.AShotsAgainst + _df.ACornersAgainst))*_df.AGames)/(_df.HGames+_df.AGames)
+	Hser = _df.sort_values('DEff', ascending=True).Team.reset_index(drop=True)
+	hDRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	aDRank = Hser[Hser==aTeam_vs.get()].index[0]+1
+	#
 	_df['HOEff'] = (_df.HScored1H+_df.HScored2H) / _df.HShotsFavor
 	_df['HDEff'] = (_df.HConceded1H+_df.HConceded2H) / _df.HShotsAgainst
 	Hser = _df.sort_values('HOEff', ascending=False).Team.reset_index(drop=True)
-	hORank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	hHORank = Hser[Hser==hTeam_vs.get()].index[0]+1
 	Hser = _df.sort_values('HDEff', ascending=True).Team.reset_index(drop=True)
-	hDRank = Hser[Hser==hTeam_vs.get()].index[0]+1
+	hHDRank = Hser[Hser==hTeam_vs.get()].index[0]+1
 	_df['AOEff'] = (_df.AScored1H+_df.AScored2H) / _df.AShotsFavor
 	_df['ADEff'] = (_df.AConceded1H+_df.AConceded2H) / _df.AShotsAgainst
 	Aser = _df.sort_values('AOEff', ascending=False).Team.reset_index(drop=True)
-	aORank = Aser[Aser==aTeam_vs.get()].index[0]+1
+	aAORank = Aser[Aser==aTeam_vs.get()].index[0]+1
 	Aser = _df.sort_values('ADEff', ascending=True).Team.reset_index(drop=True)
-	aDRank = Aser[Aser==aTeam_vs.get()].index[0]+1
+	aADRank = Aser[Aser==aTeam_vs.get()].index[0]+1
 	
 	
 	if not type(t1) is str:	
 		t1.delete('1.0', END)
 		t1.insert(END, hTeam_vs.get() + ':\n')
-		t1.insert(END, '\t#' + str(hRank).ljust(2,' ') + ' place\t#' + str(hHRank).ljust(2,' ') + ' at home\n')
-		t1.insert(END, '\t#' + str(h1HRank).ljust(2,' ') + ' 1H at home\n')
-		t1.insert(END, '\t#' + str(h2HRank).ljust(2,' ') + ' 2H at home\n')
-		t1.insert(END, '\t#' + str(hHGSRank).ljust(2,' ') + ' goals scored at home\n')
-		t1.insert(END, '\t#' + str(hSRank).ljust(2,' ') + ' shots at home\n')
-		t1.insert(END, '\t#' + str(hORank).ljust(2,' ') + ' ofensive efficiency at home\n')
-		t1.insert(END, '\t#' + str(hHGCRank).ljust(2,' ') + ' goals conceded at home\n')		
-		t1.insert(END, '\t#' + str(hDRank).ljust(2,' ') + ' defensive efficiency at home\n')
+		t1.insert(END, '#' + str(hRank).ljust(2,' ') + ' place\t\t\t #' + str(hHRank).ljust(2,' ') + ' home\n')
+		t1.insert(END, '#' + str(h1HRank).ljust(2,' ') + ' 1H\t\t\t #' + str(h1HRankH).ljust(2,' ') + ' home\n')
+		t1.insert(END, '#' + str(h2HRank).ljust(2,' ') + ' 2H\t\t\t #' + str(h2HRankH).ljust(2,' ') + ' home\n')
+		t1.insert(END, '#' + str(hGSRank).ljust(2,' ') + ' goals scored\t\t\t #' + str(hHGSRank).ljust(2,' ') + ' home\n')
+		t1.insert(END, '#' + str(hSRank).ljust(2,' ') + ' shots\t\t\t #' + str(hHSRank).ljust(2,' ') + ' home\n')
+		t1.insert(END, '#' + str(hORank).ljust(2,' ') + ' ofensive efficiency\t #' + str(hHORank).ljust(2,' ') + ' home\n')
+		t1.insert(END, '#' + str(hGCRank).ljust(2,' ') + ' goals conceded\t\t\t #' + str(hHGCRank).ljust(2,' ') + ' home\n')
+		t1.insert(END, '#' + str(hDRank).ljust(2,' ') + ' defensive efficiency\t#' + str(hHDRank).ljust(2,' ') + ' home\n')
+		#
+		t1.insert(END, '\n')
 		t1.insert(END, aTeam_vs.get() + ':\n')
-		t1.insert(END, '\t#' + str(aRank).ljust(2,' ') + ' place\t#' + str(aARank).ljust(2,' ') + ' away\n')
-		t1.insert(END, '\t#' + str(a1HRank).ljust(2,' ') + ' 1H away\n')
-		t1.insert(END, '\t#' + str(a2HRank).ljust(2,' ') + ' 2H away\n')
-		t1.insert(END, '\t#' + str(aHGSRank).ljust(2,' ') + ' goals scored away\n')
-		t1.insert(END, '\t#' + str(aSRank).ljust(2,' ') + ' shots away\n')
-		t1.insert(END, '\t#' + str(aORank).ljust(2,' ') + ' ofensive efficiency away\n')
-		t1.insert(END, '\t#' + str(aHGCRank).ljust(2,' ') + ' goals conceded away\n')
-		t1.insert(END, '\t#' + str(aDRank).ljust(2,' ') + ' defensive efficiency away\n')
+		t1.insert(END, '#' + str(aRank).ljust(2,' ') + ' place\t\t\t #' + str(aARank).ljust(2,' ') + ' away\n')
+		t1.insert(END, '#' + str(a1HRank).ljust(2,' ') + ' 1H\t\t\t #' + str(a1HRankA).ljust(2,' ') + ' away\n')
+		t1.insert(END, '#' + str(a2HRank).ljust(2,' ') + ' 2H\t\t\t #' + str(a2HRankA).ljust(2,' ') + ' away\n')
+		t1.insert(END, '#' + str(aGSRank).ljust(2,' ') + ' goals scored\t\t\t #' + str(aAGSRank).ljust(2,' ') + ' away\n')
+		t1.insert(END, '#' + str(aSRank).ljust(2,' ') + ' shots\t\t\t #' + str(aASRank).ljust(2,' ') + ' away\n')
+		t1.insert(END, '#' + str(aORank).ljust(2,' ') + ' ofensive efficiency\t #' + str(aAORank).ljust(2,' ') + ' away\n')
+		t1.insert(END, '#' + str(aGCRank).ljust(2,' ') + ' goals conceded\t\t\t #' + str(aAGCRank).ljust(2,' ') + ' away\n')
+		t1.insert(END, '#' + str(aDRank).ljust(2,' ') + ' defensive efficiency\t#' + str(aADRank).ljust(2,' ') + ' away\n')
 
 
 def calculateStatsTeam(teamHGames, teamAGames):
