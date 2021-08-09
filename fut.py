@@ -65,7 +65,7 @@ class Application:
 
 		## Year
 		global active_year
-		years = ['17/18', '18/19', '19/20','20/21']
+		years = ['17/18', '18/19', '19/20','20/21','21/22']
 		active_year = StringVar(master)
 		active_year.set(years[-1])
 		w1 = ttk.OptionMenu(master, active_year, years[-1], *years)
