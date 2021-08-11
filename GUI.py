@@ -5,6 +5,8 @@ from tkinter.ttk import OptionMenu
 from tabulate import tabulate
 from ttkthemes import ThemedStyle
 
+import datetime
+
 from src.graphs import *
 from src.utils import download_league, calculate_league_stats, get_table_sorted, get_match
 
@@ -14,7 +16,14 @@ leagues = ['Premier League', 'La Liga', 'Bundesliga', 'Serie A', 'Ligue 1', 'Lig
            'Jupiler', 'Turkey', 'Greece', 'Premiership', 'Championship', 'La Liga2', 'Bundesliga2',
            'Serie B', 'Ligue 2']
 
-years = ['17/18', '18/19', '19/20', '20/21', '21/22']
+
+actual_time = datetime.datetime.now()
+if actual_time.month >= 8:
+    actual_year = actual_time.year
+else:
+    actual_year = actual_time.year - 1
+
+years = ['{}/{}'.format(year - 2000, year - 2000 + 1) for year in range(2010, actual_year)]
 
 x_buttons_league = 150
 x_buttons_stats = 1200
