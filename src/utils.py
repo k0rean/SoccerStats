@@ -120,12 +120,12 @@ def calculate_league_stats(games):
     :return: pandas dataframe stats
     """
     teams = list({*games.HomeTeam, *games.AwayTeam})
-    #_df_homeGames = games.groupby('HomeTeam')
-    #_df_awayGames = games.groupby('AwayTeam')
+    # _df_homeGames = games.groupby('HomeTeam')
+    # _df_awayGames = games.groupby('AwayTeam')
     # res = [calculate_team_stats(_df_homeGames.get_group(team), _df_awayGames.get_group(team)) for team in teams]
     res = [calculate_team_stats(games[games.HomeTeam == team], games[games.AwayTeam == team]) for team in teams]
     df = pd.concat(res).reset_index(drop=True)
-    df.columns = ['Team',  'W', 'D', 'L',
+    df.columns = ['Team', 'W', 'D', 'L',
                   'HGames', 'HPoints', 'HPoints1H', 'HPoints2H', 'HScored1H', 'HScored2H', 'HConceded1H', 'HConceded2H',
                   'HShotsFavor', 'HShotsAgainst', 'HShotsTFavor', 'HShotsTAgainst', 'HFoulsCommited', 'HFoulsSuffered',
                   'HCornersFavor', 'HCornersAgainst', 'HYellowFavor', 'HYellowAgainst', 'HRedFavor', 'HRedAgainst',
@@ -147,7 +147,7 @@ def get_table_sorted(league_stats, sortBy):
     _df = league_stats.copy(deep=True)
     _df['Scored'] = (_df.HScored1H + _df.HScored2H) * _df.HGames + (_df.AScored1H + _df.AScored2H) * _df.AGames
     _df['Conceded'] = (_df.HConceded1H + _df.HConceded2H) * _df.HGames + (
-                _df.AConceded1H + _df.AConceded2H) * _df.AGames
+            _df.AConceded1H + _df.AConceded2H) * _df.AGames
     _df['Points'] = _df.HPoints + _df.APoints
     _df['Shots'] = ((_df.HShotsFavor * _df.HGames + _df.AShotsFavor * _df.AGames) / (_df.HGames + _df.AGames))
     _df['Corners'] = ((_df.HCornersFavor * _df.HGames + _df.ACornersFavor * _df.AGames) / (_df.HGames + _df.AGames))
@@ -176,11 +176,13 @@ def get_offensive_efficiency(_df, side='all'):
     :return:
     """
     try:
-        home_eff = 100 * ((_df.HScored1H + _df.HScored2H) / _df.HGames) / (_df.HShotsFavor + _df.HShotsTFavor + _df.HCornersFavor)
+        home_eff = 100 * ((_df.HScored1H + _df.HScored2H) / _df.HGames) / (
+                    _df.HShotsFavor + _df.HShotsTFavor + _df.HCornersFavor)
     except ZeroDivisionError:
         home_eff = 0
     try:
-        away_eff = 100 * ((_df.AScored1H + _df.AScored2H) / _df.AGames) / (_df.AShotsFavor + _df.AShotsTFavor + _df.ACornersFavor)
+        away_eff = 100 * ((_df.AScored1H + _df.AScored2H) / _df.AGames) / (
+                    _df.AShotsFavor + _df.AShotsTFavor + _df.ACornersFavor)
     except ZeroDivisionError:
         away_eff = 0
     if side == 'home':
@@ -199,11 +201,13 @@ def get_defensive_efficiency(_df, side='all'):
     :return:
     """
     try:
-        home_eff = 100 * ((_df.HConceded1H + _df.HConceded2H) / _df.HGames) / (_df.HShotsAgainst + _df.HShotsTAgainst + _df.HCornersAgainst)
+        home_eff = 100 * ((_df.HConceded1H + _df.HConceded2H) / _df.HGames) / (
+                    _df.HShotsAgainst + _df.HShotsTAgainst + _df.HCornersAgainst)
     except ZeroDivisionError:
         home_eff = 0
     try:
-        away_eff = 100 * ((_df.AConceded1H + _df.AConceded2H) / _df.AGames) / (_df.AShotsAgainst + _df.AShotsTAgainst + _df.ACornersAgainst)
+        away_eff = 100 * ((_df.AConceded1H + _df.AConceded2H) / _df.AGames) / (
+                    _df.AShotsAgainst + _df.AShotsTAgainst + _df.ACornersAgainst)
     except ZeroDivisionError:
         away_eff = 0
     if side == 'home':
