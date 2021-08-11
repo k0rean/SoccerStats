@@ -26,12 +26,14 @@ def graph_goals(df, str):
     plt.legend(prop={'size': 8})
     plt.title(str)
     plt.xticks(fontsize=10, rotation=20)
+    plt.ylabel('Home')
 
     plt.subplot(212)
     plt.bar(teams, aGoals1, label='1st Half Away')
     plt.bar(teams, aGoals2, bottom=aGoals1, label='2nd Half Away')
     plt.legend(prop={'size': 8})
     plt.xticks(fontsize=10, rotation=20)
+    plt.ylabel('Away')
 
     manager = plt.get_current_fig_manager()
     manager.full_screen_toggle()
@@ -50,7 +52,7 @@ def graph_situations(df, str):
         hFouls2 = df.HFoulsSuffered.to_list()
         aFouls1 = df.AFoulsCommited.to_list()
         aFouls2 = df.AFoulsSuffered.to_list()
-    elif "Performance" in str:
+    elif "Goal Difference" in str:
         hPerf1 = df.HScored1H.sub(df.HConceded1H, axis=0).to_list()
         hPerf2 = df.HScored2H.sub(df.HConceded2H, axis=0).to_list()
         aPerf1 = df.AScored1H.sub(df.AConceded1H, axis=0).to_list()
@@ -63,12 +65,13 @@ def graph_situations(df, str):
     elif "Fouls" in str:
         subcategorybar(teams, [hFouls1, hFouls2])
         plt.legend(('Home Fouls Commited', 'Home Fouls Suffered'), prop={'size': 8})
-    elif "Performance" in str:
+    elif "Goal Difference" in str:
         subcategorybar(teams, [hPerf1, hPerf2], 0.6)
         plt.legend(('Home Performance 1Half', 'Home Performance 2Half'), prop={'size': 8})
         plt.axhline(y=0, color='black', linestyle='-')
     plt.title(str)
     plt.xticks(fontsize=10, rotation=20)
+    plt.ylabel('Home')
 
     plt.subplot(212)
     if "Corners" in str:
@@ -77,10 +80,11 @@ def graph_situations(df, str):
     elif "Fouls" in str:
         subcategorybar(teams, [aFouls1, aFouls2])
         plt.legend(('Away Fouls Commited', 'Away Fouls Suffered'), prop={'size': 8})
-    elif "Performance" in str:
+    elif "Goal Difference" in str:
         subcategorybar(teams, [aPerf1, aPerf2], 0.6)
         plt.legend(('Away Performance 1Half', 'Away Performance 2Half'), prop={'size': 8})
         plt.axhline(y=0, color='black', linestyle='-')
+    plt.ylabel('Away')
     plt.xticks(fontsize=10, rotation=20)
 
     manager = plt.get_current_fig_manager()
@@ -131,6 +135,7 @@ def graph_situations_stack(df, str):
                    prop={'size': 8})
     plt.title(str)
     plt.xticks(fontsize=10, rotation=20)
+    plt.ylabel('Home')
 
     plt.subplot(212)
     if "Shots" in str:
@@ -142,6 +147,7 @@ def graph_situations_stack(df, str):
         plt.legend(('Away Yellows in favor', 'Away Reds in favor', 'Away Yellows against', 'Away Reds against'),
                    prop={'size': 8})
     plt.xticks(fontsize=10, rotation=20)
+    plt.ylabel('Away')
 
     manager = plt.get_current_fig_manager()
     manager.full_screen_toggle()

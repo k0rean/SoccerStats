@@ -49,10 +49,18 @@ def calculate_side_stats(games, side):
     n_games = len(games)
     # Points FT
     _df_points = games.groupby('FTR').size()
-    points = _df_points.loc[favor] * 3 + _df_points.loc['D'] * 1
+    points = 0
+    if favor in _df_points.index:
+        points += _df_points.loc[favor] * 3
+    if 'D' in _df_points.index:
+        points += _df_points.loc['D'] * 1
     # Points HT
     _df_ht_points = games.groupby('HTR').size()
-    points_1t = _df_ht_points.loc[favor] * 3 + _df_ht_points.loc['D'] * 1
+    points_1t = 0
+    if favor in _df_ht_points.index:
+        points_1t += _df_ht_points.loc[favor] * 3
+    if 'D' in _df_ht_points.index:
+        points_1t += _df_ht_points.loc['D'] * 1
     # Points 2nd half
     wins = len(games[(games['FT{}G'.format(favor)] - games['HT{}G'.format(favor)]) >
                      (games['FT{}G'.format(against)] - games['HT{}G'.format(against)])])
@@ -90,7 +98,10 @@ def calculate_team_stats(team_h_games, team_a_games):
     :param team_a_games: pandas dataframe away games
     :return: pandas dataframe team stats
     """
-    team_name = team_h_games.iloc[0].HomeTeam
+    if len(team_h_games) > 0:
+        team_name = team_h_games.iloc[0].HomeTeam
+    else:
+        team_name = team_a_games.iloc[0].AwayTeam
     wins = len(team_h_games[team_h_games.FTR == 'H']) + len(team_a_games[team_a_games['FTR'] == 'A'])
     draws = len(team_h_games[team_h_games.FTR == 'D']) + len(team_a_games[team_a_games['FTR'] == 'D'])
     losses = len(team_h_games[team_h_games.FTR == 'A']) + len(team_a_games[team_a_games['FTR'] == 'H'])
@@ -109,10 +120,10 @@ def calculate_league_stats(games):
     :return: pandas dataframe stats
     """
     teams = list({*games.HomeTeam, *games.AwayTeam})
-    _df_homeGames = games.groupby('HomeTeam')
-    _df_awayGames = games.groupby('AwayTeam')
-
-    res = [calculate_team_stats(_df_homeGames.get_group(team), _df_awayGames.get_group(team)) for team in teams]
+    #_df_homeGames = games.groupby('HomeTeam')
+    #_df_awayGames = games.groupby('AwayTeam')
+    # res = [calculate_team_stats(_df_homeGames.get_group(team), _df_awayGames.get_group(team)) for team in teams]
+    res = [calculate_team_stats(games[games.HomeTeam == team], games[games.AwayTeam == team]) for team in teams]
     df = pd.concat(res).reset_index(drop=True)
     df.columns = ['Team',  'W', 'D', 'L',
                   'HGames', 'HPoints', 'HPoints1H', 'HPoints2H', 'HScored1H', 'HScored2H', 'HConceded1H', 'HConceded2H',
@@ -124,3 +135,177 @@ def calculate_league_stats(games):
     league_stats = df.iloc[(df.HPoints + df.APoints).sort_values(ascending=False).index].reset_index(drop=True)
 
     return league_stats
+
+
+def get_table_sorted(league_stats, sortBy):
+    """
+    Get Table sorted by sortBy
+    :param league_stats: pandas dataframe
+    :param sortBy: str
+    :return: pandas dataframe sorted
+    """
+    _df = league_stats.copy(deep=True)
+    _df['Scored'] = (_df.HScored1H + _df.HScored2H) * _df.HGames + (_df.AScored1H + _df.AScored2H) * _df.AGames
+    _df['Conceded'] = (_df.HConceded1H + _df.HConceded2H) * _df.HGames + (
+                _df.AConceded1H + _df.AConceded2H) * _df.AGames
+    _df['Points'] = _df.HPoints + _df.APoints
+    _df['Shots'] = ((_df.HShotsFavor * _df.HGames + _df.AShotsFavor * _df.AGames) / (_df.HGames + _df.AGames))
+    _df['Corners'] = ((_df.HCornersFavor * _df.HGames + _df.ACornersFavor * _df.AGames) / (_df.HGames + _df.AGames))
+    _df['OEff'] = get_offensive_efficiency(_df)
+    _df['DEff'] = get_defensive_efficiency(_df)
+
+    for col in ['Shots', 'Corners', 'OEff', 'DEff']:  # round to two decimal places
+        _df[col] = (_df[col] * 100).fillna(0).astype(int) / 100.0
+
+    sort_order = False
+    if sortBy.get() == 'Conceded' or sortBy.get() == 'DEff':
+        sort_order = True
+
+    _df = _df[['Team', sortBy.get()]]
+    _df = _df.sort_values(sortBy.get(), ascending=sort_order).reset_index(drop=True)
+    _df.index = _df.index + 1
+
+    return _df
+
+
+def get_offensive_efficiency(_df, side='all'):
+    """
+    Get offensive efficiency
+    :param _df: league_stats
+    :param side: 'home', 'away' or 'all'
+    :return:
+    """
+    try:
+        home_eff = 100 * ((_df.HScored1H + _df.HScored2H) / _df.HGames) / (_df.HShotsFavor + _df.HShotsTFavor + _df.HCornersFavor)
+    except ZeroDivisionError:
+        home_eff = 0
+    try:
+        away_eff = 100 * ((_df.AScored1H + _df.AScored2H) / _df.AGames) / (_df.AShotsFavor + _df.AShotsTFavor + _df.ACornersFavor)
+    except ZeroDivisionError:
+        away_eff = 0
+    if side == 'home':
+        return home_eff
+    elif side == 'away':
+        return away_eff
+    else:
+        return (home_eff * _df.HGames + away_eff * _df.AGames) / (_df.HGames + _df.AGames)
+
+
+def get_defensive_efficiency(_df, side='all'):
+    """
+    Get defensive efficiency
+    :param _df: league_stats
+    :param side: 'home', 'away' or 'all'
+    :return:
+    """
+    try:
+        home_eff = 100 * ((_df.HConceded1H + _df.HConceded2H) / _df.HGames) / (_df.HShotsAgainst + _df.HShotsTAgainst + _df.HCornersAgainst)
+    except ZeroDivisionError:
+        home_eff = 0
+    try:
+        away_eff = 100 * ((_df.AConceded1H + _df.AConceded2H) / _df.AGames) / (_df.AShotsAgainst + _df.AShotsTAgainst + _df.ACornersAgainst)
+    except ZeroDivisionError:
+        away_eff = 0
+    if side == 'home':
+        return home_eff
+    elif side == 'away':
+        return away_eff
+    else:
+        return (home_eff * _df.HGames + away_eff * _df.AGames) / (_df.HGames + _df.AGames)
+
+
+def get_team_metrics(league_stats, team, side_name):
+    """
+    Get team metrics
+    :param league_stats:
+    :param team:
+    :param side_name:
+    """
+    if side_name == 'home':
+        side = 'H'
+    else:
+        side = 'A'
+    _df = league_stats.copy(deep=True).set_index('Team', drop=True)
+    dic = dict()
+    # League rank
+    _df['aux'] = (_df.HPoints + _df.APoints)
+    dic['Rank'] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    _df['aux'] = (_df['{}Points'.format(side)])
+    dic['{}Rank'.format(side)] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    # Goals
+    # Scored
+    _df['aux'] = (_df.HScored1H + _df.HScored2H + _df.AScored1H + _df.AScored2H)
+    dic['Scored'] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    _df['aux'] = (_df['{}Scored1H'.format(side)] + _df['{}Scored2H'.format(side)])
+    dic['{}Scored'.format(side)] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    # # 1 Half
+    _df['aux'] = (_df.HScored1H + _df.AScored1H)
+    dic['Scored_1H'] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    _df['aux'] = (_df['{}Scored1H'.format(side)])
+    dic['{}Scored_1H'.format(side)] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    # # 2 Half
+    _df['aux'] = (_df.HScored2H + _df.AScored2H)
+    dic['Scored_2H'] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    _df['aux'] = (_df['{}Scored2H'.format(side)])
+    dic['{}Scored_2H'.format(side)] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    # Conceded
+    _df['aux'] = (_df.HConceded1H + _df.HConceded2H + _df.AConceded1H + _df.AConceded2H)
+    dic['Conceded'] = _df.sort_values('aux').index.get_loc(team) + 1
+    _df['aux'] = (_df['{}Conceded1H'.format(side)] + _df['{}Conceded2H'.format(side)])
+    dic['{}Conceded'.format(side)] = _df.sort_values('aux').index.get_loc(team) + 1
+    # # 1 Half
+    _df['aux'] = (_df.HConceded1H + _df.AConceded1H)
+    dic['Conceded_1H'] = _df.sort_values('aux').index.get_loc(team) + 1
+    _df['aux'] = (_df['{}Conceded1H'.format(side)])
+    dic['{}Conceded_1H'.format(side)] = _df.sort_values('aux').index.get_loc(team) + 1
+    # # 2 Half
+    _df['aux'] = (_df.HConceded2H + _df.AConceded2H)
+    dic['Conceded_2H'] = _df.sort_values('aux').index.get_loc(team) + 1
+    _df['aux'] = (_df['{}Conceded2H'.format(side)])
+    dic['{}Conceded_2H'.format(side)] = _df.sort_values('aux').index.get_loc(team) + 1
+    # Shots
+    _df['aux'] = (_df.HShotsFavor + _df.AShotsFavor)
+    dic['Shots'] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    _df['aux'] = (_df['{}ShotsFavor'.format(side)])
+    dic['{}Shots'.format(side)] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    # Shots on target
+    _df['aux'] = (_df.HShotsTFavor + _df.AShotsTFavor)
+    dic['ShotsT'] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    _df['aux'] = (_df['{}ShotsTFavor'.format(side)])
+    dic['{}ShotsT'.format(side)] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    # Corners
+    _df['aux'] = (_df.HCornersFavor + _df.ACornersFavor)
+    dic['Corners'] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    _df['aux'] = (_df['{}CornersFavor'.format(side)])
+    dic['{}Corners'.format(side)] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    # Efficiency
+    _df['OEff'] = get_offensive_efficiency(_df)
+    _df['{}OEff'.format(side)] = get_offensive_efficiency(_df, side_name)
+    _df['DEff'] = get_defensive_efficiency(_df)
+    _df['{}DEff'.format(side)] = get_defensive_efficiency(_df, side_name)
+    # Offensive
+    _df['aux'] = _df.OEff
+    dic['OEff'] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    _df['aux'] = (_df['{}OEff'.format(side)])
+    dic['{}OEff'.format(side)] = _df.sort_values('aux', ascending=False).index.get_loc(team) + 1
+    # Defensive
+    _df['aux'] = _df.DEff
+    dic['DEff'] = _df.sort_values('aux').index.get_loc(team) + 1
+    _df['aux'] = (_df['{}DEff'.format(side)])
+    dic['{}DEff'.format(side)] = _df.sort_values('aux').index.get_loc(team) + 1
+
+    return dic
+
+
+def get_match(league_stats, h_team, a_team):
+    """
+    Get Match metrics
+    :param league_stats: pandas dataframe
+    :param h_team: str
+    :param a_team: str
+    :return:
+    """
+    home = get_team_metrics(league_stats, h_team, 'home')
+    away = get_team_metrics(league_stats, a_team, 'away')
+
+    return home, away
