@@ -36,7 +36,9 @@ def graph_goals(df, str):
 
     manager = plt.get_current_fig_manager()
     manager.full_screen_toggle()
-    plt.show()
+    plt.draw()
+    plt.waitforbuttonpress(0)
+    plt.close(fig)
 
 
 def graph_situations(df, str):
@@ -88,7 +90,9 @@ def graph_situations(df, str):
 
     manager = plt.get_current_fig_manager()
     manager.full_screen_toggle()
-    plt.show()
+    plt.draw()
+    plt.waitforbuttonpress(0)
+    plt.close(fig)
 
 
 def subcategorybar(X, vals, width=0.8):
@@ -150,7 +154,9 @@ def graph_situations_stack(df, str):
 
     manager = plt.get_current_fig_manager()
     manager.full_screen_toggle()
-    plt.show()
+    plt.draw()
+    plt.waitforbuttonpress(0)
+    plt.close(fig)
 
 
 def subcategorybar_stack(X, vals1, vals2, width=0.8):

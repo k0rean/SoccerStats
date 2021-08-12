@@ -33,8 +33,11 @@ def download_league(league, year):
         url = 'http://www.football-data.co.uk/mmz4281/{}/{}'.format(year.replace('/', ''), filename)
     else:
         url = 'http://www.football-data.co.uk/mmz4281/{}/{}'.format(year.get().replace('/', ''), filename)
-
-    return pd.read_csv(url)
+    try:
+        _df = pd.read_csv(url)
+        return _df
+    except UnicodeDecodeError:
+        return pd.DataFrame()
 
 
 def calculate_side_stats(games, side):
