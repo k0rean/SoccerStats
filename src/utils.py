@@ -301,7 +301,22 @@ def get_team_metrics(league_stats, team, side_name):
     _df['aux'] = (_df['{}DEff'.format(side)])
     dic['{}DEff'.format(side)] = _df.sort_values('aux').index.get_loc(team) + 1
 
-    return dic
+    team_stats = [
+            [dic['Rank'], dic['{}Rank'.format(side)]],
+            [dic['Scored'], dic['{}Scored'.format(side)]],
+            [dic['Scored_1H'], dic['{}Scored_1H'.format(side)]],
+            [dic['Scored_2H'], dic['{}Scored_2H'.format(side)]],
+            [dic['Conceded'], dic['{}Conceded'.format(side)]],
+            [dic['Conceded_1H'], dic['{}Conceded_1H'.format(side)]],
+            [dic['Conceded_2H'], dic['{}Conceded_2H'.format(side)]],
+            [dic['Shots'], dic['{}Shots'.format(side)]],
+            [dic['ShotsT'], dic['{}ShotsT'.format(side)]],
+            [dic['Corners'], dic['{}Corners'.format(side)]],
+            [dic['OEff'], dic['{}OEff'.format(side)]],
+            [dic['DEff'], dic['{}DEff'.format(side)]]
+        ]
+
+    return team_stats
 
 
 def get_match(league_stats, h_team, a_team):
@@ -316,3 +331,4 @@ def get_match(league_stats, h_team, a_team):
     away = get_team_metrics(league_stats, a_team, 'away')
 
     return home, away
+

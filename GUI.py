@@ -1,13 +1,12 @@
+import datetime
 import sys
 from tkinter import Tk, Label, Button, StringVar, Text, END
 from tkinter.ttk import OptionMenu
 
+import pandas as pd
 from tabulate import tabulate
 from ttkthemes import ThemedStyle
-
 from win32api import GetSystemMetrics
-
-import datetime
 
 from src.graphs import *
 from src.utils import download_league, calculate_league_stats, get_table_sorted, get_match
@@ -53,6 +52,8 @@ match_get = {'x': 0.38, 'y': 0.25}
 
 big_text = {'x': 0.3, 'y': 0.3, 'h': 0.6, 'w': 0.25}
 
+pred_text = {'x': 0.6, 'y': 0.3, 'h': 0.6, 'w': 0.25}
+
 plots_info = {'x': 0.9, 'y': 0.3}
 graphs_button_offset = 0.05
 
@@ -68,9 +69,11 @@ class Application:
 
         self.master.tk.call('source', 'sun-valley.tcl')
         self.master.tk.call('set_theme', 'light')
+        self.theme = 'light'
 
         # Title
-        self.msg = Label(self.master, text="SoccerStats: " + ''.join([' '] * (max([len(item) for item in leagues]) + 6)),
+        self.msg = Label(self.master,
+                         text="SoccerStats: " + ''.join([' '] * (max([len(item) for item in leagues]) + 6)),
                          font=("Calibri", "40", "bold"))
         self.msg.place(relx=title['x'], rely=title['y'])
 
@@ -93,12 +96,16 @@ class Application:
         self.league_stats = calculate_league_stats(self.league_games)
 
         # Text
-        self.big_text = Text(self.master)
+        self.big_text = Text(self.master, font=('Consolas', 12))
         self.big_text.place(relx=big_text['x'], rely=big_text['y'], relwidth=big_text['w'], relheight=big_text['h'])
 
-        self.table_text = Text(self.master)
+        self.table_text = Text(self.master, font=('Consolas', 12))
         self.table_text.place(relx=table_text['x'], rely=table_text['y'], relwidth=table_text['w'],
                               relheight=table_text['h'])
+
+        self.pred_text = Text(self.master, font=('Consolas', 12))
+        self.pred_text.place(relx=pred_text['x'], rely=pred_text['y'], relwidth=pred_text['w'],
+                             relheight=pred_text['h'])
 
         # Teams
         teams = self.league_stats.Team.to_list()
@@ -161,7 +168,8 @@ class Application:
                                        league_year_get['x'],
                                        league_year_get['y'], 'green')
         # Get Match
-        self.get_match = place_button(self.master, "Get Match", general_button_width, self.get_match_func, match_get['x'],
+        self.get_match = place_button(self.master, "Get Match", general_button_width, self.get_match_func,
+                                      match_get['x'],
                                       match_get['y'], 'green')
         # Get Table
         self.get_table = place_button(self.master, "Get Table", general_button_width, self.get_table_func,
@@ -186,7 +194,8 @@ class Application:
         self.sort_table = place_button(self.master, "Sort Table", general_button_width, self.dummy_func,
                                        sort_table_info['x'], sort_table_info['y'])
         # Quit
-        self.quit = place_button(self.master, "Quit", general_button_width, self.exit_func, quit_but['x'], quit_but['y'],
+        self.quit = place_button(self.master, "Quit", general_button_width, self.exit_func, quit_but['x'],
+                                 quit_but['y'],
                                  'red')
         # Change theme
         self.theme = place_button(self.master, "Theme", general_button_width, self.theme_func, theme_but['x'],
@@ -194,31 +203,33 @@ class Application:
 
     # Buttons methods
     def scored_func(self, event=None):
-        graph_goals(self.league_stats, "Goals Scored per game")
+        graph_goals(self.league_stats, "Goals Scored per game", self.theme)
 
     def conceded_func(self, event=None):
-        graph_goals(self.league_stats, "Goals Conceded per game")
+        graph_goals(self.league_stats, "Goals Conceded per game", self.theme)
 
     def goal_diffs_func(self, event=None):
-        graph_situations(self.league_stats, "Goal Difference per game")
+        graph_situations(self.league_stats, "Goal Difference per game", self.theme)
 
     def corners_func(self, event=None):
-        graph_situations(self.league_stats, "Corners per game")
+        graph_situations(self.league_stats, "Corners per game", self.theme)
 
     def fouls_func(self, event=None):
-        graph_situations(self.league_stats, "Fouls per game")
+        graph_situations(self.league_stats, "Fouls per game", self.theme)
 
     def shots_func(self, event=None):
-        graph_situations_stack(self.league_stats, "Shots per game")
+        graph_situations_stack(self.league_stats, "Shots per game", self.theme)
 
     def cards_func(self, event=None):
-        graph_situations_stack(self.league_stats, "Cards per game")
+        graph_situations_stack(self.league_stats, "Cards per game", self.theme)
 
     def theme_func(self, event=None):
-        if self.master.tk.call("ttk::style", "theme", "use") == "sun-valley-dark":
+        if self.theme == 'dark':
             self.master.tk.call("set_theme", "light")
+            self.theme = 'light'
         else:
             self.master.tk.call("set_theme", "dark")
+            self.theme = 'dark'
 
     def dummy_func(self, event=None):
         pass
@@ -237,67 +248,60 @@ class Application:
         # Update Table - sorted by points
         self.sortBy.set(sort_options[0])
         self.get_table_func()
+        # clear big_text
+        self.big_text.delete('1.0', END)
 
     def get_table_func(self, event=None):
         table = get_table_sorted(self.league_stats, self.sortBy)
         self.table_text.delete('1.0', END)
-        #self.table_text.insert(END, tabulate(table, headers='keys', tablefmt='psql'))
-        self.table_text.insert(END, table.to_markdown())
+        self.table_text.insert(END, tabulate(table, headers='keys', tablefmt='psql', numalign='center'))
 
     def get_match_func(self, event=None):
+        # Big text
         home, away = get_match(self.league_stats, self.hTeam_vs.get(), self.aTeam_vs.get())
         self.big_text.delete('1.0', END)
+        data = ['Rank', 'Scored', 'Scored_1H', 'Scored_2H', 'Conceded', 'Conceded_1H', 'Conceded_2H',
+                'Shots', 'ShotsT', 'Corners', 'OEff', 'DEff']
         # home
-        self.big_text.insert(END, self.hTeam_vs.get() + ':\n')
-        self.big_text.insert(END, '#' + str(home['Rank']).ljust(2, ' ') + ' place\t\t\t #' + str(home['HRank']).ljust(2,
-                                                                                                                      ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['Scored']).ljust(2, ' ') + ' goals scored\t\t\t #' + str(
-            home['HScored']).ljust(2, ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['Scored_1H']).ljust(2, ' ') + ' goals scored 1H\t\t\t #' + str(
-            home['HScored_1H']).ljust(2, ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['Scored_2H']).ljust(2, ' ') + ' goals scored 2H\t\t\t #' + str(
-            home['HScored_2H']).ljust(2, ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['Conceded']).ljust(2, ' ') + ' goals conceded\t\t\t #' + str(
-            home['HConceded']).ljust(2, ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['Conceded_1H']).ljust(2, ' ') + ' goals conceded 1H\t\t\t #' + str(
-            home['HConceded_1H']).ljust(2, ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['Conceded_2H']).ljust(2, ' ') + ' goals conceded 2H\t\t\t #' + str(
-            home['HConceded_2H']).ljust(2, ' ') + ' home\n')
-        self.big_text.insert(END,
-                             '#' + str(home['Shots']).ljust(2, ' ') + ' shots\t\t\t #' + str(home['HShots']).ljust(2,
-                                                                                                                   ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['Corners']).ljust(2, ' ') + ' corners\t\t\t #' + str(
-            home['HCorners']).ljust(2, ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['OEff']).ljust(2, ' ') + ' offensive efficiency\t\t\t #' + str(
-            home['HOEff']).ljust(2, ' ') + ' home\n')
-        self.big_text.insert(END, '#' + str(home['DEff']).ljust(2, ' ') + ' defensive efficiency\t\t\t #' + str(
-            home['HDEff']).ljust(2, ' ') + ' home\n')
+        _df = pd.DataFrame(home, columns=['#Geral', '#Home'])
+        _df[self.hTeam_vs.get().ljust(10)] = data
+        self.big_text.insert(END, tabulate(_df.set_index(self.hTeam_vs.get().ljust(10), drop=True), headers='keys',
+                                           tablefmt='psql', numalign='center'))
         # away
         self.big_text.insert(END, '\n')
-        self.big_text.insert(END, self.aTeam_vs.get() + ':\n')
-        self.big_text.insert(END, '#' + str(away['Rank']).ljust(2, ' ') + ' place\t\t\t #' + str(away['ARank']).ljust(2,
-                                                                                                                      ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['Scored']).ljust(2, ' ') + ' goals scored\t\t\t #' + str(
-            away['AScored']).ljust(2, ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['Scored_1H']).ljust(2, ' ') + ' goals scored 1H\t\t\t #' + str(
-            away['AScored_1H']).ljust(2, ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['Scored_2H']).ljust(2, ' ') + ' goals scored 2H\t\t\t #' + str(
-            away['AScored_2H']).ljust(2, ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['Conceded']).ljust(2, ' ') + ' goals conceded\t\t\t #' + str(
-            away['AConceded']).ljust(2, ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['Conceded_1H']).ljust(2, ' ') + ' goals conceded 1H\t\t\t #' + str(
-            away['AConceded_1H']).ljust(2, ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['Conceded_2H']).ljust(2, ' ') + ' goals conceded 2H\t\t\t #' + str(
-            away['AConceded_2H']).ljust(2, ' ') + ' away\n')
-        self.big_text.insert(END,
-                             '#' + str(away['Shots']).ljust(2, ' ') + ' shots\t\t\t #' + str(away['AShots']).ljust(2,
-                                                                                                                   ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['Corners']).ljust(2, ' ') + ' corners\t\t\t #' + str(
-            away['ACorners']).ljust(2, ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['OEff']).ljust(2, ' ') + ' offensive efficiency\t\t\t #' + str(
-            away['AOEff']).ljust(2, ' ') + ' away\n')
-        self.big_text.insert(END, '#' + str(away['DEff']).ljust(2, ' ') + ' defensive efficiency\t\t\t #' + str(
-            away['ADEff']).ljust(2, ' ') + ' away\n')
+        _df = pd.DataFrame(away, columns=['#Geral', '#Away'])
+        _df[self.aTeam_vs.get().ljust(10)] = data
+        self.big_text.insert(END, tabulate(_df.set_index(self.aTeam_vs.get().ljust(10), drop=True), headers='keys',
+                                           tablefmt='psql', numalign='center'))
+
+        # Pred text
+        self.pred_text.delete('1.0', END)
+        _df_aux = self.league_games[
+            (self.league_games.HomeTeam == self.hTeam_vs.get()) & (self.league_games.AwayTeam == self.aTeam_vs.get())]
+        if len(_df_aux) == 0:
+            self.pred_text.insert(END, "This match hasn't occurred yet\n")
+            return
+        _df_aux = _df_aux.iloc[0]
+        self.pred_text.insert(END, "Played at {}\n\n".format(_df_aux.Date))
+        ht = {'home': _df_aux.HTHG, 'away': _df_aux.HTAG}
+        ft = {'home': _df_aux.FTHG, 'away': _df_aux.FTAG}
+        odds = {'1': _df_aux.B365H, 'X': _df_aux.B365D, '2': _df_aux.B365A}
+        shots = {'home': _df_aux.HS, 'away': _df_aux.AS}
+        shots_target = {'home': _df_aux.HST, 'away': _df_aux.AST}
+        corners = {'home': _df_aux.HC, 'away': _df_aux.AC}
+        fouls = {'home': _df_aux.HF, 'away': _df_aux.AF}
+        yellows = {'home': _df_aux.HY, 'away': _df_aux.AY}
+        reds = {'home': _df_aux.HR, 'away': _df_aux.AR}
+        self.pred_text.insert(END, tabulate(pd.DataFrame([ft.values(), ht.values(), shots.values(), shots_target.values(), corners.values(),
+                                                          fouls.values(), yellows.values(), reds.values()],
+                                                         columns=[self.hTeam_vs.get(), self.aTeam_vs.get()],
+                                                         index=['FT', 'HT', 'Shots', 'Shots target', 'Corners', 'Fouls',
+                                                                'Yellow Cards', 'Red Cards']),
+                                            headers='keys', tablefmt='psql', numalign='center'))
+        self.pred_text.insert(END, "\n\n")
+        self.pred_text.insert(END, tabulate(
+            pd.DataFrame([odds.values()], columns=[self.hTeam_vs.get(), 'X', self.aTeam_vs.get()],
+                         index=['Odds']), headers='keys', tablefmt='psql', numalign='center'))
 
     @staticmethod
     def exit_func(event=None):
