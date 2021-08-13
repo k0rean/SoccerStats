@@ -26,8 +26,10 @@ years = ['{}/{}'.format(year - 2000, year - 2000 + 1) for year in range(2010, ac
 screen_width = GetSystemMetrics(0)
 if screen_width > 1500:
     general_button_width = 15
+    font_size = 12
 else:
     general_button_width = 13
+    font_size = 10
 
 frame = {'w': 60, 'h': 40}
 
@@ -42,7 +44,7 @@ league_year_get = {'x': 0.12, 'y': 0.15}
 sort_table_info = {'x': 0.04, 'y': 0.25}
 sort_table_sel = {'x': 0.12, 'y': 0.25}
 sort_table_get = {'x': 0.12, 'y': 0.3}
-table_text = {'x': 0.04, 'y': 0.35, 'h': 0.55, 'w': 0.22}
+table_text = {'x': 0.04, 'y': 0.35, 'h': 0.6, 'w': 0.22}
 
 home_team_info = {'x': 0.3, 'y': 0.15}
 home_team_sel = {'x': 0.38, 'y': 0.15}
@@ -50,9 +52,9 @@ away_team_info = {'x': 0.3, 'y': 0.2}
 away_team_sel = {'x': 0.38, 'y': 0.2}
 match_get = {'x': 0.38, 'y': 0.25}
 
-big_text = {'x': 0.3, 'y': 0.3, 'h': 0.6, 'w': 0.25}
+big_text = {'x': 0.3, 'y': 0.3, 'h': 0.65, 'w': 0.25}
 
-pred_text = {'x': 0.6, 'y': 0.3, 'h': 0.6, 'w': 0.25}
+pred_text = {'x': 0.6, 'y': 0.3, 'h': 0.65, 'w': 0.25}
 
 plots_info = {'x': 0.9, 'y': 0.3}
 graphs_button_offset = 0.05
@@ -96,14 +98,14 @@ class Application:
         self.league_stats = calculate_league_stats(self.league_games)
 
         # Text
-        self.big_text = Text(self.master, font=('Consolas', 12))
+        self.big_text = Text(self.master, font=('Consolas', font_size))
         self.big_text.place(relx=big_text['x'], rely=big_text['y'], relwidth=big_text['w'], relheight=big_text['h'])
 
-        self.table_text = Text(self.master, font=('Consolas', 12))
+        self.table_text = Text(self.master, font=('Consolas', font_size))
         self.table_text.place(relx=table_text['x'], rely=table_text['y'], relwidth=table_text['w'],
                               relheight=table_text['h'])
 
-        self.pred_text = Text(self.master, font=('Consolas', 12))
+        self.pred_text = Text(self.master, font=('Consolas', font_size))
         self.pred_text.place(relx=pred_text['x'], rely=pred_text['y'], relwidth=pred_text['w'],
                              relheight=pred_text['h'])
 
@@ -128,13 +130,9 @@ class Application:
         self.sort_menu.place(relx=sort_table_sel['x'], rely=sort_table_sel['y'])
 
         def place_button(widget, text, width, func, x, y, color=''):
-            if color == '':
-                button = Button(widget)
-            else:
-                button = Button(widget, bg=color)
-            button["text"] = text
-            button["width"] = width
-            button.bind("<Button-1>", func)
+            button = Button(widget, command=func, text=text, width=width)
+            if color != '':
+                button['bg'] = color
             button.place(relx=x, rely=y)
 
             return button
