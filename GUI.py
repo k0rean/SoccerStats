@@ -1,6 +1,6 @@
 import datetime
 import sys
-from tkinter import Tk, Label, Button, StringVar, Text, END
+from tkinter import Tk, Label, Button, StringVar, Text, END, LEFT
 from tkinter.ttk import OptionMenu
 
 import pandas as pd
@@ -26,14 +26,17 @@ years = ['{}/{}'.format(year - 2000, year - 2000 + 1) for year in range(2010, ac
 screen_width = GetSystemMetrics(0)
 if screen_width > 1500:
     general_button_width = 15
-    font_size = 12
+    general_font_size = 12
 else:
     general_button_width = 13
-    font_size = 10
+    general_font_size = 10
+
+general_font = ('Consolas', general_font_size)
 
 frame = {'w': 60, 'h': 40}
 
 title = {'x': 0.3, 'y': 0.01}
+title_font = ('Calibri', '40', 'bold')
 
 league_info = {'x': 0.04, 'y': 0.05}
 league_sel = {'x': 0.12, 'y': 0.05}
@@ -74,10 +77,10 @@ class Application:
         self.theme = 'light'
 
         # Title
-        self.msg = Label(self.master,
+        self.title = Label(self.master,
                          text="SoccerStats: " + ''.join([' '] * (max([len(item) for item in leagues]) + 6)),
-                         font=("Calibri", "40", "bold"))
-        self.msg.place(relx=title['x'], rely=title['y'])
+                         font=title_font)
+        self.title.place(relx=title['x'], rely=title['y'])
 
         # Year
         self.active_year = StringVar(self.master)
@@ -98,14 +101,14 @@ class Application:
         self.league_stats = calculate_league_stats(self.league_games)
 
         # Text
-        self.big_text = Text(self.master, font=('Consolas', font_size))
+        self.big_text = Label(self.master, font=general_font, justify=LEFT, anchor='nw')
         self.big_text.place(relx=big_text['x'], rely=big_text['y'], relwidth=big_text['w'], relheight=big_text['h'])
 
-        self.table_text = Text(self.master, font=('Consolas', font_size))
+        self.table_text = Label(self.master, font=general_font, justify=LEFT, anchor='nw')
         self.table_text.place(relx=table_text['x'], rely=table_text['y'], relwidth=table_text['w'],
                               relheight=table_text['h'])
 
-        self.pred_text = Text(self.master, font=('Consolas', font_size))
+        self.pred_text = Label(self.master, font=general_font, justify=LEFT, anchor='nw')
         self.pred_text.place(relx=pred_text['x'], rely=pred_text['y'], relwidth=pred_text['w'],
                              relheight=pred_text['h'])
 
@@ -240,47 +243,43 @@ class Application:
         self.h_team_menu.set_menu(teams[0], *teams)
         self.a_team_menu.set_menu(teams[1], *teams)
         # Update Title
-        self.msg['text'] = "SoccerStats: " + str(self.active_league.get()) + " " + str(
+        self.title['text'] = "SoccerStats: " + str(self.active_league.get()) + " " + str(
             self.active_year.get()) + ''.join(
             [' '] * (max([len(item) for item in leagues]) - len(str(self.active_league.get()))))
         # Update Table - sorted by points
         self.sortBy.set(sort_options[0])
         self.get_table_func()
         # clear big_text
-        self.big_text.delete('1.0', END)
+        self.big_text['text'] = ''
 
     def get_table_func(self, event=None):
         table = get_table_sorted(self.league_stats, self.sortBy)
-        self.table_text.delete('1.0', END)
-        self.table_text.insert(END, tabulate(table, headers='keys', tablefmt='psql', numalign='center'))
+        self.table_text['text'] = tabulate(table, headers='keys', tablefmt='psql', numalign='center')
 
     def get_match_func(self, event=None):
         # Big text
         home, away = get_match(self.league_stats, self.hTeam_vs.get(), self.aTeam_vs.get())
-        self.big_text.delete('1.0', END)
         data = ['Rank', 'Scored', 'Scored_1H', 'Scored_2H', 'Conceded', 'Conceded_1H', 'Conceded_2H',
                 'Shots', 'ShotsT', 'Corners', 'OEff', 'DEff']
         # home
         _df = pd.DataFrame(home, columns=['#Geral', '#Home'])
         _df[self.hTeam_vs.get().ljust(10)] = data
-        self.big_text.insert(END, tabulate(_df.set_index(self.hTeam_vs.get().ljust(10), drop=True), headers='keys',
-                                           tablefmt='psql', numalign='center'))
+        self.big_text['text'] = tabulate(_df.set_index(self.hTeam_vs.get().ljust(10), drop=True), headers='keys',
+                                           tablefmt='psql', numalign='center')
         # away
-        self.big_text.insert(END, '\n')
         _df = pd.DataFrame(away, columns=['#Geral', '#Away'])
         _df[self.aTeam_vs.get().ljust(10)] = data
-        self.big_text.insert(END, tabulate(_df.set_index(self.aTeam_vs.get().ljust(10), drop=True), headers='keys',
-                                           tablefmt='psql', numalign='center'))
+        self.big_text['text'] += "\n" + tabulate(_df.set_index(self.aTeam_vs.get().ljust(10), drop=True), headers='keys',
+                                           tablefmt='psql', numalign='center')
 
         # Pred text
-        self.pred_text.delete('1.0', END)
         _df_aux = self.league_games[
             (self.league_games.HomeTeam == self.hTeam_vs.get()) & (self.league_games.AwayTeam == self.aTeam_vs.get())]
         if len(_df_aux) == 0:
-            self.pred_text.insert(END, "This match hasn't occurred yet\n")
+            self.pred_text['text'] = "This match hasn't occurred yet\n"
             return
         _df_aux = _df_aux.iloc[0]
-        self.pred_text.insert(END, "Played at {}\n\n".format(_df_aux.Date))
+        self.pred_text['text'] = "Played at {}\n\n".format(_df_aux.Date)
         ht = {'home': _df_aux.HTHG, 'away': _df_aux.HTAG}
         ft = {'home': _df_aux.FTHG, 'away': _df_aux.FTAG}
         odds = {'1': _df_aux.B365H, 'X': _df_aux.B365D, '2': _df_aux.B365A}
@@ -290,16 +289,16 @@ class Application:
         fouls = {'home': _df_aux.HF, 'away': _df_aux.AF}
         yellows = {'home': _df_aux.HY, 'away': _df_aux.AY}
         reds = {'home': _df_aux.HR, 'away': _df_aux.AR}
-        self.pred_text.insert(END, tabulate(pd.DataFrame([ft.values(), ht.values(), shots.values(), shots_target.values(), corners.values(),
+        self.pred_text['text'] += tabulate(pd.DataFrame([ft.values(), ht.values(), shots.values(), shots_target.values(), corners.values(),
                                                           fouls.values(), yellows.values(), reds.values()],
                                                          columns=[self.hTeam_vs.get(), self.aTeam_vs.get()],
                                                          index=['FT', 'HT', 'Shots', 'Shots target', 'Corners', 'Fouls',
                                                                 'Yellow Cards', 'Red Cards']),
-                                            headers='keys', tablefmt='psql', numalign='center'))
-        self.pred_text.insert(END, "\n\n")
-        self.pred_text.insert(END, tabulate(
+                                            headers='keys', tablefmt='psql', numalign='center')
+        self.pred_text['text'] += "\n\n"
+        self.pred_text['text'] += tabulate(
             pd.DataFrame([odds.values()], columns=[self.hTeam_vs.get(), 'X', self.aTeam_vs.get()],
-                         index=['Odds']), headers='keys', tablefmt='psql', numalign='center'))
+                         index=['Odds']), headers='keys', tablefmt='psql', numalign='center')
 
     @staticmethod
     def exit_func(event=None):
