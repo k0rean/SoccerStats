@@ -1,6 +1,8 @@
 # SoccerStats
 
 Historical soccer data analysis tool.
+Download the headless executable file from: https://github.com/k0rean/SoccerStats/blob/master/dist/SoccerStats.exe
+
 
 Available leagues:
 - Premier League
