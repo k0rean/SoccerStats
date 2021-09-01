@@ -3,7 +3,7 @@
 **Historical soccer data analysis tool.**
 
 Run the executable file: https://github.com/k0rean/SoccerStats/blob/master/SoccerStats.exe
-
+Compatible with Windows and Linux.
 
 Available leagues:
 - Premier League
@@ -26,6 +26,10 @@ Available leagues:
 Available seasons: 2010/2011 until the present. Note: Some seasons might be unavailable.
 
 The data is downloaded from https://www.football-data.co.uk/ as requested. The data from the current season is updated every week.
+
+
+
+**Screenshots:**
 
 ![Image of Preview](https://github.com/k0rean/SoccerStats/blob/master/images/preview.png)
 
