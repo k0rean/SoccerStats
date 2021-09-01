@@ -77,7 +77,7 @@ def calculate_side_stats(games, side):
     # Shots
     shots_favor = games['{}S'.format(favor)].mean()
     shots_against = games['{}S'.format(against)].mean()
-    shots_target_favor = games['{}ST'.format(favor)].mean()
+    shots_target_favor = games['{}ST'.format(favor)].mean() 
     shots_target_against = games['{}ST'.format(against)].mean()
     # Fouls
     fouls_commited = games['{}F'.format(favor)].mean()
@@ -123,18 +123,19 @@ def calculate_league_stats(games):
     :return: pandas dataframe stats
     """
     teams = list({*games.HomeTeam, *games.AwayTeam})
-    # _df_homeGames = games.groupby('HomeTeam')
-    # _df_awayGames = games.groupby('AwayTeam')
-    # res = [calculate_team_stats(_df_homeGames.get_group(team), _df_awayGames.get_group(team)) for team in teams]
     res = [calculate_team_stats(games[games.HomeTeam == team], games[games.AwayTeam == team]) for team in teams]
-    df = pd.concat(res).reset_index(drop=True)
-    df.columns = ['Team', 'W', 'D', 'L',
+    cols = ['Team', 'W', 'D', 'L',
                   'HGames', 'HPoints', 'HPoints1H', 'HPoints2H', 'HScored1H', 'HScored2H', 'HConceded1H', 'HConceded2H',
                   'HShotsFavor', 'HShotsAgainst', 'HShotsTFavor', 'HShotsTAgainst', 'HFoulsCommited', 'HFoulsSuffered',
                   'HCornersFavor', 'HCornersAgainst', 'HYellowFavor', 'HYellowAgainst', 'HRedFavor', 'HRedAgainst',
                   'AGames', 'APoints', 'APoints1H', 'APoints2H', 'AScored1H', 'AScored2H', 'AConceded1H', 'AConceded2H',
                   'AShotsFavor', 'AShotsAgainst', 'AShotsTFavor', 'AShotsTAgainst', 'AFoulsCommited', 'AFoulsSuffered',
                   'ACornersFavor', 'ACornersAgainst', 'AYellowFavor', 'AYellowAgainst', 'ARedFavor', 'ARedAgainst']
+    try:
+        df = pd.concat(res).reset_index(drop=True)
+        df.columns = cols
+    except ValueError:
+        df = pd.DataFrame(columns=cols)
     league_stats = df.iloc[(df.HPoints + df.APoints).sort_values(ascending=False).index].reset_index(drop=True)
 
     return league_stats
@@ -331,4 +332,25 @@ def get_match(league_stats, h_team, a_team):
     away = get_team_metrics(league_stats, a_team, 'away')
 
     return home, away
+
+
+def get_match_dataset_creation(league, game_index):
+    """
+    Get model input data representating a game
+    :param league:
+    :param game_index:
+    """
+    date = league.iloc[game_index].Date
+    home, away = league.iloc[game_index].HomeTeam, league.iloc[game_index].AwayTeam
+    league_until_date = league[league.Date < date]
+    if len(league_until_date) > 20:
+        league_stats_until_date = calculate_league_stats(league_until_date)
+        home_stats = league_stats_until_date[league_stats_until_date.Team == home]
+        home_metrics = get_team_metrics(league_stats_until_date, home, 'home')
+        away_stats = league_stats_until_date[league_stats_until_date.Team == away]
+        away_metrics = get_team_metrics(league_stats_until_date, away, 'away')
+        return [home_stats, home_metrics, away_stats, away_metrics]
+    else:
+        return None
+
 

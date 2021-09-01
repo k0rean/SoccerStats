@@ -35,36 +35,36 @@ general_font = ('Consolas', general_font_size)
 
 frame = {'w': 60, 'h': 40}
 
-title = {'x': 0.3, 'y': 0.01}
+title = {'x': 0.25, 'y': 0.0}
 title_font = ('Calibri', '40', 'bold')
 
-league_info = {'x': 0.04, 'y': 0.05}
-league_sel = {'x': 0.12, 'y': 0.05}
-year_info = {'x': 0.04, 'y': 0.1}
-year_sel = {'x': 0.12, 'y': 0.1}
-league_year_get = {'x': 0.12, 'y': 0.15}
+league_info = {'x': 0.02, 'y': 0.03}
+league_sel = {'x': 0.1, 'y': 0.03}
+year_info = {'x': 0.02, 'y': 0.08}
+year_sel = {'x': 0.1, 'y': 0.08}
+league_year_get = {'x': 0.1, 'y': 0.13}
 
-sort_table_info = {'x': 0.04, 'y': 0.25}
-sort_table_sel = {'x': 0.12, 'y': 0.25}
-sort_table_get = {'x': 0.12, 'y': 0.3}
-table_text = {'x': 0.04, 'y': 0.35, 'h': 0.6, 'w': 0.22}
+sort_table_info = {'x': 0.02, 'y': 0.2}
+sort_table_sel = {'x': 0.1, 'y': 0.2}
+sort_table_get = {'x': 0.1, 'y': 0.25}
+table_text = {'x': 0.02, 'y': 0.3, 'h': 0.6, 'w': 0.22}
 
-home_team_info = {'x': 0.3, 'y': 0.15}
-home_team_sel = {'x': 0.38, 'y': 0.15}
-away_team_info = {'x': 0.3, 'y': 0.2}
-away_team_sel = {'x': 0.38, 'y': 0.2}
-match_get = {'x': 0.38, 'y': 0.25}
+home_team_info = {'x': 0.6, 'y': 0.12}
+home_team_sel = {'x': 0.68, 'y': 0.12}
+away_team_info = {'x': 0.6, 'y': 0.17}
+away_team_sel = {'x': 0.68, 'y': 0.17}
+match_get = {'x': 0.68, 'y': 0.22}
 
-big_text = {'x': 0.3, 'y': 0.3, 'h': 0.65, 'w': 0.25}
+big_text = {'x': 0.45, 'y': 0.3, 'h': 0.65, 'w': 0.25}
 
-pred_text = {'x': 0.6, 'y': 0.3, 'h': 0.65, 'w': 0.25}
+pred_text = {'x': 0.67, 'y': 0.3, 'h': 0.65, 'w': 0.25}
 
-plots_info = {'x': 0.9, 'y': 0.3}
+plots_info = {'x': 0.92, 'y': 0.1}
 graphs_button_offset = 0.05
 
-theme_but = {'x': 0.9, 'y': 0.03}
+theme_but = {'x': 0.92, 'y': 0.03}
 
-quit_but = {'x': 0.04, 'y': 0.95}
+quit_but = {'x': 0.02, 'y': 0.95}
 
 
 class Application:
@@ -309,6 +309,4 @@ if __name__ == '__main__':
     root = Tk()
     root.attributes('-fullscreen', True)
     Application(root)
-    style = ThemedStyle(root)
-    style.set_theme("scidgrey")
     root.mainloop()
