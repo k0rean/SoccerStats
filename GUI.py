@@ -1,11 +1,10 @@
 import datetime
 import sys
-from tkinter import Tk, Label, Button, StringVar, Text, END, LEFT
+from tkinter import Tk, Label, Button, StringVar, LEFT
 from tkinter.ttk import OptionMenu
 
 import pandas as pd
 from tabulate import tabulate
-from ttkthemes import ThemedStyle
 from win32api import GetSystemMetrics
 
 from src.graphs import *
@@ -20,6 +19,8 @@ leagues = ['Premier League', 'La Liga', 'Bundesliga', 'Serie A', 'Ligue 1', 'Lig
 actual_time = datetime.datetime.now()
 if actual_time.month >= 8:
     actual_year = actual_time.year + 1
+else:
+    actual_year = actual_time.year
 
 years = ['{}/{}'.format(year - 2000, year - 2000 + 1) for year in range(2010, actual_year)]
 

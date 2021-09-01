@@ -2,7 +2,7 @@
 
 **Historical soccer data analysis tool.**
 
-Download the headless executable file from: https://github.com/k0rean/SoccerStats/blob/master/dist/SoccerStats.exe
+Run the executable file: https://github.com/k0rean/SoccerStats/blob/master/SoccerStats.exe
 
 
 Available leagues:
