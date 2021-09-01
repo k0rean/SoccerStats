@@ -24,10 +24,10 @@ Available seasons: 2010/2011 until the present. Some seasons might be unavailabl
 
 The data is downloaded from https://www.football-data.co.uk/ as requested. The data from the current season is updated every week.
 
-![Image of Preview](https://github.com/k0rean/SoccerStats/images/preview.png)
+![Image of Preview](https://github.com/k0rean/SoccerStats/blob/master/images/preview.png)
 
-![Image of Dark Mode Preview](https://github.com/k0rean/SoccerStats/images/dark_preview.png)
+![Image of Dark Mode Preview](https://github.com/k0rean/SoccerStats/blob/master/images/dark_preview.png)
 
-![Image of Goals Scored](https://github.com/k0rean/SoccerStats/images/scored.png)
+![Image of Goals Scored](https://github.com/k0rean/SoccerStats/blob/master/images/scored.png)
 
-![Image of Goal Diff](https://github.com/k0rean/SoccerStats/images/dark_diff.png)
+![Image of Goal Diff](https://github.com/k0rean/SoccerStats/blob/master/images/goal_diff.png)
