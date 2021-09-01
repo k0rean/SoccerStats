@@ -30,4 +30,4 @@ The data is downloaded from https://www.football-data.co.uk/ as requested. The d
 
 ![Image of Goals Scored](https://github.com/k0rean/SoccerStats/blob/master/images/scored.png)
 
-![Image of Goal Diff](https://github.com/k0rean/SoccerStats/blob/master/images/goal_diff.png)
+![Image of Goal Diff](https://github.com/k0rean/SoccerStats/blob/master/images/dark_diff.png)
