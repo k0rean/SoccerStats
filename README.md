@@ -1,6 +1,6 @@
 # SoccerStats
 
-**Historical soccer data analysis tool.**
+**Historical soccer data analysis tool**
 
 Run the executable file: https://github.com/k0rean/SoccerStats/blob/master/SoccerStats.exe
 Compatible with Windows and Linux.
