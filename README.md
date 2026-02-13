@@ -1,43 +1,30 @@
-# SoccerStats
+# SoccerStats Web Dashboard
 
-**Historical soccer data analysis tool**
+A modern Streamlit dashboard for soccer statistics visualization.
 
-Run the executable file: https://github.com/k0rean/SoccerStats/blob/master/SoccerStats.exe
+## Features
 
-Compatible with Windows and Linux.
+- League selection (Premier League, La Liga, Bundesliga, Serie A, etc.)
+- Team performance analysis
+- Goals, corners, fouls, cards visualizations
+- Home/Away split statistics
+- Interactive charts with Plotly
 
-Available leagues:
-- Premier League
-- La Liga
-- Bundesliga
-- Serie A
-- Ligue 1
-- Liga NOS
-- Eredivisie
- - Jupiler 
- - Turkey 
- - Greece 
- - Premiership 
- - Championship 
- - La Liga2 
- - Bundesliga2
- - Serie B 
- - Ligue 2
+## Setup
 
-Available seasons: 2010/2011 until the present. Note: Some seasons might be unavailable.
+```bash
+pip install -r requirements.txt
+```
 
-The data is downloaded from https://www.football-data.co.uk/ as requested. The data from the current season is updated every week.
+## Run
 
+```bash
+streamlit run app.py
+```
 
+## Docker
 
-**Screenshots:**
-
-![Image of Preview](https://github.com/k0rean/SoccerStats/blob/master/images/preview.png)
-
-![Image of Dark Mode Preview](https://github.com/k0rean/SoccerStats/blob/master/images/dark_preview.png)
-
-There are several plots available in right side column menu.
-
-![Image of Goals Scored](https://github.com/k0rean/SoccerStats/blob/master/images/scored.png)
-
-![Image of Goal Diff](https://github.com/k0rean/SoccerStats/blob/master/images/dark_diff.png)
+```bash
+docker build -t soccerstats .
+docker run -p 8501:8501 soccerstats
+```
