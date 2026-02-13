@@ -570,7 +570,7 @@ def main():
         )
         fig.update_traces(textposition='outside', marker=dict(line=dict(width=0)))
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         st.markdown('</div>', unsafe_allow_html=True)
     
     # === TAB 2: Form Guide ===
@@ -741,7 +741,7 @@ def main():
             margin=dict(t=20, b=40, l=40, r=40),
             legend=dict(orientation='h', y=1.1, x=0.5, xanchor='center')
         )
-        st.plotly_chart(fig_comp, use_container_width=True)
+        st.plotly_chart(fig_comp, width="stretch")
     
     # === TAB 4: Goals (expanded) ===
     with tab4:
@@ -836,7 +836,7 @@ def main():
                 margin=dict(t=20, b=20, l=20, r=20)
             )
             st.markdown("#### 📊 Over/Under 2.5")
-            st.plotly_chart(fig_ou, use_container_width=True)
+            st.plotly_chart(fig_ou, width="stretch")
         
         with col_c2:
             # BTTS pie chart
@@ -857,7 +857,7 @@ def main():
                 margin=dict(t=20, b=20, l=20, r=20)
             )
             st.markdown("#### 🎯 Both Teams to Score")
-            st.plotly_chart(fig_btts, use_container_width=True)
+            st.plotly_chart(fig_btts, width="stretch")
         
         # Half-time goals
         st.markdown("#### ⏱️ First Half vs Second Half")
@@ -880,7 +880,7 @@ def main():
                 margin=dict(t=20, b=40, l=40, r=40),
                 showlegend=False
             )
-            st.plotly_chart(fig_half, use_container_width=True)
+            st.plotly_chart(fig_half, width="stretch")
         
         with col_h2:
             # Half-time results
@@ -905,7 +905,7 @@ def main():
                     margin=dict(t=20, b=20, l=20, r=20)
                 )
                 st.markdown("#### 🕐 Half-Time Leader")
-                st.plotly_chart(fig_ht, use_container_width=True)
+                st.plotly_chart(fig_ht, width="stretch")
         
         # Scoreline matrix
         st.markdown("#### 🔢 Most Common Scorelines")
@@ -929,7 +929,7 @@ def main():
                 showlegend=False
             )
             fig_score.update_traces(marker=dict(line=dict(width=0)))
-            st.plotly_chart(fig_score, use_container_width=True)
+            st.plotly_chart(fig_score, width="stretch")
         
         with col_s2:
             st.markdown("##### Top 10")
@@ -956,7 +956,7 @@ def main():
                 xaxis_title='', yaxis_title=''
             )
             fig1.update_traces(marker=dict(line=dict(width=0)))
-            st.plotly_chart(fig1, use_container_width=True)
+            st.plotly_chart(fig1, width="stretch")
         
         with col2:
             st.markdown("#### 🛡️ Best Defense")
@@ -970,7 +970,7 @@ def main():
                 xaxis_title='', yaxis_title=''
             )
             fig2.update_traces(marker=dict(line=dict(width=0)))
-            st.plotly_chart(fig2, use_container_width=True)
+            st.plotly_chart(fig2, width="stretch")
         
         # Goal difference
         st.markdown("#### 📊 Goal Difference")
@@ -983,7 +983,7 @@ def main():
             margin=dict(t=20, b=20, l=150, r=20), xaxis_title='', yaxis_title=''
         )
         fig3.update_traces(marker=dict(line=dict(width=0)))
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
     
     # === TAB 5: Compare ===
     with tab5:
@@ -1011,7 +1011,7 @@ def main():
                 margin=dict(t=20, b=40, l=40, r=40),
                 legend=dict(orientation='h', y=1.1, x=0.5, xanchor='center')
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
     
     # Footer
     st.markdown("---")
