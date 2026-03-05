@@ -7,24 +7,25 @@ from pathlib import Path
 CACHE_DIR = Path.home() / ".cache" / "soccerstats"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+# League codes with flags (from feature/streamlit-dashboard)
 LEAGUE_URLS = {
-    "Premier League": "E0",
-    "La Liga": "SP1",
-    "Bundesliga": "D1",
-    "Serie A": "IT1",
-    "Ligue 1": "F1",
-    "Liga NOS": "P1",
-    "Eredivisie": "N1",
-    "Jupiler": "B1",
-    "Super Lig": "T1",
-    "Super League Greece": "G1",
-    "Premiership": "SC0",
-    "Championship": "SC1",
-    "La Liga 2": "SP2",
-    "Bundesliga 2": "D2",
-    "Serie B": "IT2",
-    "Ligue 2": "F2",
+    "🇬🇧 Premier League": "E0",
+    "🇪🇸 La Liga": "SP1",
+    "🇩🇪 Bundesliga": "D1",
+    "🇮🇹 Serie A": "I1",
+    "🇫🇷 Ligue 1": "F1",
+    "🇵🇹 Liga Portugal": "P1",
+    "🇳🇱 Eredivisie": "N1",
+    "🇧🇪 Belgian Pro": "B1",
+    "🇹🇷 Super Lig": "T1",
+    "🇬🇷 Super League Greece": "G1",
+    "🇸🇦 Saudi Pro": "SAU",
+    "🇦🇪 UAE League": "UAE",
+    "🇦🇷 Argentina Liga": "ARG",
+    "🇧🇷 Brasileiro": "BRA",
 }
+
+CURRENT_SEASON = "2025/2026"
 
 
 def get_cache_path(league: str, season: str) -> Path:
@@ -81,9 +82,8 @@ def _build_url(league: str, season: str) -> str | None:
 @st.cache_data(ttl=300)
 def get_available_seasons(league: str) -> list[str]:
     """Get available seasons for a league (cached 5 min)."""
-    # Static list based on football-data.co.uk coverage
-    current_year = 2024
-    return [f"{y}/{y+1}" for y in range(2010, current_year)]
+    # Updated to include 2025/2026 from feature/streamlit-dashboard
+    return [f"{y}/{y+1}" for y in range(2020, 2026)]
 
 
 def get_team_stats(df: pd.DataFrame) -> pd.DataFrame:
