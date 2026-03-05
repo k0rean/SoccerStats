@@ -314,33 +314,56 @@ def render_nav():
         ('compare', '⚖️ Compare'),
     ]
     
-    nav_html = """
+    # Use radio buttons styled as nav
+    st.markdown("""
+    <style>
+    .nav-container {
+        background: linear-gradient(90deg, #0f0f17 0%, #1a1a2e 100%);
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin: -1rem -1rem 1rem -1rem;
+    }
+    .nav-logo {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00d4ff 0%, #7b2cbf 50%, #ff006e 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    </style>
     <div class="nav-container">
-        <div class="nav-logo">
-            <span>⚽</span> SoccerStats Pro
-        </div>
-        <div class="nav-links">
-    """
-    
-    for key, label in pages:
-        active = 'active' if st.session_state.page == key else ''
-        nav_html += f'<button class="nav-link {active}" onclick="parent.postMessage({"type":"streamlit:setComponentValue","value":"{key}"}, "*")">{label}</button>'
-    
-    nav_html += """
-        </div>
+        <div class="nav-logo">⚽ SoccerStats Pro</div>
     </div>
-    """
+    """, unsafe_allow_html=True)
     
-    st.markdown(nav_html, unsafe_allow_html=True)
+    # Simple radio for page selection (styled as tabs)
+    st.markdown("""
+    <style>
+    div.stRadio > div { flex-direction: row; gap: 8px; }
+    div.stRadio > div > label { 
+        background: rgba(255,255,255,0.05); 
+        padding: 12px 20px; 
+        border-radius: 12px; 
+        border: 1px solid rgba(255,255,255,0.08);
+        cursor: pointer;
+    }
+    div.stRadio > div > label:hover { background: rgba(255,255,255,0.1); }
+    div.stRadio > div > label:has(input:checked) { 
+        background: linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(123,44,191,0.15) 100%);
+        border-color: rgba(0,212,255,0.4);
+    }
+    </style>
+    """, unsafe_allow_html=True)
     
-    # Handle nav clicks via Streamlit's component value
-    try:
-        selected = st.selectbox('Nav', [k for k, _ in pages], 
-                               index=[k for k, _ in pages].index(st.session_state.page),
-                               label_visibility='collapsed', key='nav_select')
-        st.session_state.page = selected
-    except:
-        pass
+    page = st.radio("Navigation", [p[1] for p in pages], 
+                    index=[p[0] for p in pages].index(st.session_state.page),
+                    label_visibility="collapsed", horizontal=True)
+    
+    st.session_state.page = [p[0] for p in pages if p[1] == page][0]
 
 
 def render_filters():
