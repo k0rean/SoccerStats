@@ -510,7 +510,7 @@ def render_betting_page(df):
                     <div class="stat-label">BTTS Yes</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">{btts['no']}%</div>
+                    <div class="stat-value">{btts['no_pct']}%</div>
                     <div class="stat-label">BTTS No</div>
                 </div>
             </div>

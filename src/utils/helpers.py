@@ -62,16 +62,18 @@ def calculate_over_under(df: pd.DataFrame, threshold: float = 2.5) -> dict:
 def calculate_btts(df: pd.DataFrame) -> dict:
     """Calculate Both Teams To Score stats."""
     if df.empty:
-        return {'yes': 0, 'no': 0, 'yes_pct': 0}
+        return {'yes': 0, 'no': 0, 'yes_pct': 0, 'no_pct': 0}
     
     btts_yes = len(df[(df['FTHG'] > 0) & (df['FTAG'] > 0)])
     btts_no = len(df) - btts_yes
     total = len(df)
+    yes_pct = round(btts_yes / total * 100, 1) if total > 0 else 0
     
     return {
         'yes': btts_yes,
         'no': btts_no,
-        'yes_pct': round(btts_yes / total * 100, 1) if total > 0 else 0
+        'yes_pct': yes_pct,
+        'no_pct': round(100 - yes_pct, 1),
     }
 
 
